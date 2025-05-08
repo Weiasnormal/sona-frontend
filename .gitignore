@@ -17,6 +17,14 @@
 /.next/
 /out/
 
+# Node.js
+node_modules/
+.next/
+out/
+dist/
+.env
+
+
 # production
 /build
 

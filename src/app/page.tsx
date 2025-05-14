@@ -1,70 +1,85 @@
-import Image from "next/image";
-import Link from "next/link";
+import Header from '@/components/Header'
+import MBTICard from '@/components/MBTICard'
+import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
+import Image from "next/image"
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Section */}
+          <div className="lg:col-span-8">
+            {/* Welcome Section */}
+            <div className="mb-12">
+              <h1 className="text-2xl font-bold text-gray-900">Welcome back, Sarah!</h1>
+              <p className="text-gray-600 mt-1">Your personality type is INFJ</p>
+            </div>
 
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+            {/* Music Sections */}
+            <div className="space-y-12">
+              {/* Chill Vibes */}
+              <section>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900">Chill Vibes</h2>
+                  <Link href="/playlists/chill" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    See All →
+                  </Link>
+                </div>
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="aspect-square relative">
+                      <Image
+                        src="/images/midnight-dreams.jpg"
+                        alt="Midnight Dreams Album Cover"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium">Midnight Dreams</h3>
+                      <p className="text-sm text-gray-500">Ambient Collective</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
 
-        {/* ✅ Add this Login Link Button */}
-        <Link
-          href="/login"
-          className="rounded-full border border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto"
-        >
-          Go to Login Page
-        </Link>
+              {/* Focus Mode */}
+              <section>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900">Focus Mode</h2>
+                  <Link href="/playlists/focus" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    See All →
+                  </Link>
+                </div>
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="aspect-square relative">
+                      <Image
+                        src="/images/piano-studies.jpg"
+                        alt="Piano Studies Album Cover"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium">Piano Studies</h3>
+                      <p className="text-sm text-gray-500">Classical Flow</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* Right Section - MBTI Profile */}
+          <div className="lg:col-span-4">
+            <MBTICard />
+          </div>
         </div>
       </main>
-
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        {/* ...footer links... */}
-      </footer>
     </div>
-  );
+  )
 }

@@ -1,94 +1,102 @@
 import Header from '@/components/Header'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import MusicSection from '@/components/MusicSection'
 import Link from 'next/link'
-import Image from 'next/image'
+import MBTICard from '@/components/MBTICard'
+import ProfileCard from '@/components/ProfileCard'
+import WelcomeSection from '@/components/WelcomeSection'
+
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Welcome back, Sarah!</h1>
-          <p className="mt-1 text-muted-foreground">Your personality type is INFJ</p>
-        </div>
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
+          {/* Welcome Section */}
+          <div className="mb-12">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground lg:text-5xl">Welcome back, Sarah!</h1>
+            <p className="mt-2 text-lg text-muted-foreground lg:text-xl">Your personality type is INFJ</p>
+          </div>
 
-        {/* Music Sections */}
-        <div className="space-y-8">
-          {/* Chill Vibes */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-foreground">Chill Vibes</h2>
-              <Link 
-                href="/playlists/chill" 
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                See All →
-              </Link>
-            </div>
-            <div className="max-w-sm overflow-hidden rounded-lg border bg-card shadow-sm">
-              <div className="aspect-square relative w-full">
-                <Image
-                  src="/images/midnight-dreams.jpg"
-                  alt="Midnight Dreams Album Cover"
-                  width={192}
-                  height={192}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-card-foreground">Midnight Dreams</h3>
-                <p className="text-sm text-muted-foreground">Ambient Collective</p>
-              </div>
-            </div>
-          </section>
+          {/* Music Sections Grid */}
+          <div className="mb-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
+            <MusicSection
+              title="Chill Vibes"
+              album={{
+                title: "Midnight Dreams",
+                artist: "Ambient Collective",
+                imageUrl: "/images/midnight-dreams.jpg"
+              }}
+              href="/playlists/chill"
+            />
 
-          {/* Focus Mode */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-foreground">Focus Mode</h2>
-              <Link 
-                href="/playlists/focus" 
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                See All →
-              </Link>
-            </div>
-            <div className="max-w-sm overflow-hidden rounded-lg border bg-card shadow-sm">
-              <div className="aspect-square relative w-full">
-                <Image
-                  src="/images/piano-studies.png"
-                  alt="Piano Studies Album Cover"
-                  width={192}
-                  height={192}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-card-foreground">Piano Studies</h3>
-                <p className="text-sm text-muted-foreground">Classical Flow</p>
-              </div>
-            </div>
-          </section>
-        </div>
+            <MusicSection
+              title="Focus Mode"
+              album={{
+                title: "Piano Studies",
+                artist: "Classical Flow",
+                imageUrl: "/images/piano-studies.png"
+              }}
+              href="/playlists/focus"
+            />
 
-        {/* MBTI Profile */}
-        <div className="mt-8 max-w-sm">
-          <div className="rounded-lg border bg-card p-6">
-            <h2 className="mb-4 text-lg font-semibold text-card-foreground">INFJ Profile</h2>
-            <h3 className="mb-2 text-base font-medium text-card-foreground">The Advocate</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>I - Introvert</li>
-              <li>N - Intuitive</li>
-              <li>F - Feeling</li>
-              <li>J - Judging</li>
-            </ul>
-            <Link 
-              href="/mbti/profile" 
-              className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
-            >
-              Explore Deeper →
-            </Link>
+            <MusicSection
+              title="Deep Work"
+              album={{
+                title: "Minimal Focus",
+                artist: "Ambient Works",
+                imageUrl: "/images/midnight-dreams.jpg"
+              }}
+              href="/playlists/deep-work"
+            />
+
+            <MusicSection
+              title="Evening Jazz"
+              album={{
+                title: "Night Vibes",
+                artist: "Jazz Collective",
+                imageUrl: "/images/piano-studies.png"
+              }}
+              href="/playlists/evening-jazz"
+            />
+          </div>
+
+          {/* MBTI Profile */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Card className="overflow-hidden">
+              <CardHeader className="space-y-1 pb-2">
+                <CardTitle className="text-2xl">INFJ Profile</CardTitle>
+                <p className="text-sm text-muted-foreground">The Advocate</p>
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <span className="font-semibold">I</span>
+                    <span className="col-span-3 text-sm text-muted-foreground">Introvert</span>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <span className="font-semibold">N</span>
+                    <span className="col-span-3 text-sm text-muted-foreground">Intuitive</span>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <span className="font-semibold">F</span>
+                    <span className="col-span-3 text-sm text-muted-foreground">Feeling</span>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <span className="font-semibold">J</span>
+                    <span className="col-span-3 text-sm text-muted-foreground">Judging</span>
+                  </div>
+                </div>
+                <Link 
+                  href="/mbti/profile" 
+                  className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/90"
+                >
+                  Explore Deeper
+                  <span className="ml-1">→</span>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>

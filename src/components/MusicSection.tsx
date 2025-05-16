@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface Album {
   title: string
@@ -10,44 +11,46 @@ interface Album {
 interface MusicSectionProps {
   title: string
   album: Album
+  href?: string
 }
 
-export default function MusicSection({ title, album }: MusicSectionProps) {
+export default function MusicSection({ title, album, href }: MusicSectionProps) {
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="flex flex-col space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-foreground">
           {title}
         </h2>
         <Link
-          href={`/music/${title.toLowerCase().replace(/\s+/g, '-')}`}
-          className="text-indigo-600 hover:text-indigo-700 text-sm font-medium inline-flex items-center"
+          href={href || `/music/${title.toLowerCase().replace(/\s+/g, '-')}`}
+          className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/90"
         >
           See All
-          <svg className="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
+          <span className="ml-1">→</span>
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden w-48">
-        <div className="relative aspect-square w-full">
+      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <div className="aspect-square">
           <Image
             src={album.imageUrl}
-            alt={album.title}
-            fill
-            className="object-cover"
+            alt={`${album.title} album cover`}
+            width={500}
+            height={500}
+            className="h-full w-full object-cover transition-transform duration-500 will-change-transform group-hover:scale-105"
+            priority
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
-        <div className="p-4">
-          <h3 className="font-medium text-gray-900 dark:text-white text-sm">
+        <CardContent className="p-4">
+          <h3 className="font-medium text-card-foreground">
             {album.title}
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             {album.artist}
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 } 

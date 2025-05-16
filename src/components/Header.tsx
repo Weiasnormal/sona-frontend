@@ -73,10 +73,10 @@ export default function Header() {
             {/* Profile Picture */}
             <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-gray-200">
               <Image
-                src="/images/profile.jpg"
+                src="/images/Jethro.jpg"
                 alt="Sarah"
-                width={32}
-                height={32}
+                width={64}
+                height={64}
                 className="object-cover"
               />
             </div>

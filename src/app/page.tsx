@@ -2,17 +2,17 @@ import Header from '@/components/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import MusicSection from '@/components/MusicSection'
 import Link from 'next/link'
-import MBTICard from '@/components/MBTICard'
-import ProfileCard from '@/components/ProfileCard'
-import WelcomeSection from '@/components/WelcomeSection'
-
+import "../styles/test.css"
 
 export default function Home() {
   return (
+    
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
+           {/* Test Tailwind CSS */}
+           <h1 className="test-heading">TEST</h1>
           {/* Welcome Section */}
           <div className="mb-12">
             <h1 className="text-4xl font-bold tracking-tight text-foreground lg:text-5xl">Welcome back, Sarah!</h1>

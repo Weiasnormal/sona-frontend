@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #f3f4f6;
+    --secondary-foreground: #1f2937;
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+    --accent: #f3f4f6;
+    --accent-foreground: #1f2937;
+    --card: #ffffff;
+    --card-foreground: #000000;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #e5e7eb;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: #1f2937;
+    --foreground: #ffffff;
+    --primary: #60a5fa;
+    --primary-foreground: #1f2937;
+    --secondary: #374151;
+    --secondary-foreground: #f3f4f6;
+    --muted: #374151;
+    --muted-foreground: #9ca3af;
+    --accent: #374151;
+    --accent-foreground: #f3f4f6;
+    --card: #1f2937;
+    --card-foreground: #ffffff;
+    --border: #374151;
+    --input: #374151;
+    --ring: #374151;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}

@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 
 export default function Header() {
   const { theme, setTheme } = useTheme()
+  
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -18,41 +19,43 @@ export default function Header() {
         {/* Left section with Logo */}
         <div className="flex items-center gap-x-4 lg:gap-x-6">
           <Link href="/" className="flex items-center gap-x-2">
-            <span className="text-2xl text-primary lg:text-3xl">🎵</span>
-            <span className="text-lg font-semibold text-foreground lg:text-xl">SoundType</span>
+            <span className="text-3xl text-primary lg:text-4xl">🎵</span>
+            <span className="text-2xl font-semibold text-foreground lg:text-3xl">SoundType</span>
           </Link>
+        </div>
 
-          {/* Center Navigation */}
-          <nav className="hidden md:flex md:items-center md:gap-x-4 lg:gap-x-6">
-            <Link 
-              href="/" 
-              className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
-            >
-              <Home size={18} />
-              <span>Home</span>
-            </Link>
-            <Link 
-              href="/explore" 
-              className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
-            >
-              <Compass size={18} />
-              <span>Explore</span>
-            </Link>
-            <Link 
-              href="/mbti" 
-              className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
-            >
-              <Brain size={18} />
-              <span>My MBTI</span>
-            </Link>
-            <Link 
-              href="/settings" 
-              className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
-            >
-              <Settings size={18} />
-              <span>Settings</span>
-            </Link>
-          </nav>
+        {/* Center Navigation */}
+        <div className="flex-1 flex items-center"> 
+        <nav className="flex items-center gap-x-6 lg:gap-x-8">
+          <Link 
+            href="/" 
+            className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
+          >
+            <Home size={20} />
+            <span>Home</span>
+          </Link>
+          <Link 
+            href="/explore" 
+            className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
+          >
+            <Compass size={20} />
+            <span>Explore</span>
+          </Link>
+          <Link 
+            href="/mbti" 
+            className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
+          >
+            <Brain size={20} />
+            <span>My MBTI</span>
+          </Link>
+          <Link 
+            href="/settings" 
+            className="flex items-center gap-x-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:px-4"
+          >
+            <Settings size={20} />
+            <span>Settings</span>
+          </Link>
+        </nav>
         </div>
 
         {/* Right Section */}
@@ -74,6 +77,7 @@ export default function Header() {
               priority
             />
           </div>
+          <span className="text-sm font-medium text-foreground lg:text-base">Profile Name</span>
         </div>
       </div>
     </header>

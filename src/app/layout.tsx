@@ -31,7 +31,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-row">
+          {/* The header will be rendered as part of children, outside main-content */}
+          <div className="relative flex min-h-screen flex-col">
             {children}
           </div>
         </ThemeProvider>

@@ -11,46 +11,48 @@ interface Album {
 interface MusicSectionProps {
   title: string
   album: Album
-  href?: string
+  href: string
 }
 
 export default function MusicSection({ title, album, href }: MusicSectionProps) {
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-foreground">
-          {title}
-        </h2>
-        <Link
-          href={href || `/music/${title.toLowerCase().replace(/\s+/g, '-')}`}
-          className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/90"
-        >
-          See All
-          <span className="ml-1">→</span>
-        </Link>
-      </div>
+    <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out">
+      <CardContent className="p-0">
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="p-4 sm:p-5 lg:p-6 2xl:p-7 flex items-center justify-between">
+            <h2 className="text-lg sm:text-xl lg:text-2xl 2xl:text-3xl font-semibold tracking-tight">{title}</h2>
+            <Link 
+              href={href}
+              className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-primary hover:text-primary/90 font-medium transition-colors"
+            >
+              See All
+            </Link>
+          </div>
 
-      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg">
-        <div className="aspect-square">
-          <Image
-            src={album.imageUrl}
-            alt={`${album.title} album cover`}
-            width={500}
-            height={500}
-            className="h-full w-full object-cover transition-transform duration-500 will-change-transform group-hover:scale-105"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {/* Album Cover */}
+          <div className="relative aspect-square w-full overflow-hidden bg-muted/30">
+            <Image
+              src={album.imageUrl}
+              alt={`${album.title} by ${album.artist}`}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(min-width: 2560px) 20vw, (min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              priority
+            />
+          </div>
+
+          {/* Album Info */}
+          <div className="p-4 sm:p-5 lg:p-6 2xl:p-7 space-y-2 2xl:space-y-3">
+            <h3 className="font-medium text-base sm:text-lg lg:text-xl 2xl:text-2xl tracking-tight">
+              {album.title}
+            </h3>
+            <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-muted-foreground">
+              {album.artist}
+            </p>
+          </div>
         </div>
-        <CardContent className="p-4">
-          <h3 className="font-medium text-card-foreground">
-            {album.title}
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {album.artist}
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   )
 } 

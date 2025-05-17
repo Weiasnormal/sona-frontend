@@ -11,8 +11,6 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
-           {/* Test Tailwind CSS */}
-           <h1 className="test-heading">TEST</h1>
           {/* Welcome Section */}
           <div className="mb-12">
             <h1 className="text-4xl font-bold tracking-tight text-foreground lg:text-5xl">Welcome back, Sarah!</h1>

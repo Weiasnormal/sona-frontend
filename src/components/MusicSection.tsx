@@ -16,20 +16,10 @@ interface MusicSectionProps {
 
 export default function MusicSection({ title, album, href }: MusicSectionProps) {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out">
+    <Card className="w-full max-w-[280px] sm:max-w-[350px] overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out">
       <CardContent className="p-0">
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="p-4 sm:p-5 lg:p-6 2xl:p-7 flex items-center justify-between">
-            <h2 className="text-lg sm:text-xl lg:text-2xl 2xl:text-3xl font-semibold tracking-tight">{title}</h2>
-            <Link 
-              href={href}
-              className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-primary hover:text-primary/90 font-medium transition-colors"
-            >
-              See All
-            </Link>
-          </div>
-
+          
           {/* Album Cover */}
           <div className="relative aspect-square w-full overflow-hidden bg-muted/30">
             <Image

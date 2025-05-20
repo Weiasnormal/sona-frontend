@@ -1,0 +1,92 @@
+/* Responsive overrides for extremely small viewports */
+
+/* Base responsive container */
+.container {
+  min-width: 240px;
+}
+
+/* Prevent minimization on desktop screens */
+@media (min-width: 1024px) {
+  body {
+    min-width: 1024px;
+  }
+  
+  #main-content {
+    min-width: 1024px;
+  }
+  
+  .container {
+    min-width: 960px;
+  }
+}
+
+/* Ensure all content is visible on extremely small screens */
+@media (max-width: 359px) {
+  /* Single column layout for tiny screens */
+  .music-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Smaller text for tiny screens */
+  h1 {
+    font-size: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  h2 {
+    font-size: 1rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  p, span, button, a {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Reduce padding for tiny screens */
+  .container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Ensure buttons are properly sized */
+  button, a.button {
+    padding: 0.25rem 0.5rem !important;
+  }
+  
+  /* Stack buttons on tiny screens */
+  .button-group {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Reduce card padding */
+  .card {
+    padding: 0.5rem !important;
+  }
+  
+  /* Reduce margins between sections */
+  section {
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Hide non-essential content */
+  .hide-on-tiny {
+    display: none !important;
+  }
+}
+
+/* Ensure minimum width for the entire page */
+#main-content {
+  min-width: 240px;
+}
+
+/* Prevent horizontal scrolling */
+body {
+  overflow-x: hidden;
+}

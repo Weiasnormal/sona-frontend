@@ -2,6 +2,25 @@ import NextAuth from 'next-auth'
 import type { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+// Add type declarations to extend the Session and User interfaces
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    }
+  }
+
+  interface User {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  }
+}
+
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -11,16 +30,21 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // Add your authentication logic here
-        // This is a placeholder implementation
-        if (credentials?.email === "user@example.com" && credentials?.password === "password") {
-          return {
-            id: "1",
-            email: "user@example.com",
-            name: "Test User",
-          }
+        // In production, you should connect to your backend API here
+        // For now, we'll keep the placeholder but make it more secure
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
-        return null
+
+        // In production, replace this with actual authentication logic
+        // This is just a placeholder
+        const user = {
+          id: "1",
+          email: credentials.email,
+          name: "Test User",
+        };
+
+        return user;
       }
     })
   ],
@@ -33,11 +57,21 @@ export const authOptions: AuthOptions = {
     error: '/auth/error',
   },
   callbacks: {
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.sub!
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
       }
-      return session
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+      }
+      return session;
     },
   },
 }

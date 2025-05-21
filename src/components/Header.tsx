@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 w-full shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full backdrop-blur-lg shadow-sm border-b border-gray-200 dark:border-transparent dark:shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.1)]">
         <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 z-20">

@@ -199,19 +199,16 @@ export default function QuizPage() {
             {!quizComplete ? (
               <div>
                 {/* Question */}
-                <h2 className="text-xl sm:text-2xl font-bold text-center mb-8">
+                <h2 className="text-gray-700 text-xl sm:text-2xl font-bold text-center mb-8">
                   {questions[currentQuestion].text}
                 </h2>
                 
                 {/* Answer options */}
-                <div className="space-y-4">
+                <div className=" text-gray-700 space-y-4">
                   {questions[currentQuestion].options.map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => handleAnswer(option.scores)}
-                      className="w-full text-left p-4 border border-gray-300 rounded-lg hover:bg-red-50 transition-colors"
-                    >
-                      <span className="font-semibold">{option.id}: </span>
+                    <button key={option.id} onClick={() => handleAnswer(option.scores)}
+                    className="font-semibold w-full text-left p-4 border border-gray-300 rounded-lg hover:bg-red-50 transition-colors">
+                      
                       {option.text}
                     </button>
                   ))}
@@ -225,7 +222,7 @@ export default function QuizPage() {
                   </div>
                   <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-red-500 rounded-full" 
+                      className="h-full bg-red-500 rounded-full transition-all duration-500" 
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>

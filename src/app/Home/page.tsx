@@ -261,7 +261,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main id="main-content" className="flex-1 w-full bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-blue-900 overflow-x-hidden min-w-[240px]">
+      <main id="main-content" className="flex-1 w-full bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 overflow-x-hidden min-w-[240px]">
         {!hasCompletedQuiz ? (
           // Blank state when user hasn't taken the quiz
           <div className="container mx-auto px-3 xs:px-4 sm:px-6 py-20 text-center max-w-3xl">

@@ -1,44 +1,128 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import "../../styles/test.css";
 import "../../styles/responsive.css";
+
+// Add custom CSS for hiding scrollbars while allowing scrolling
+import "../../styles/scrollbar-hide.css";
+
+// Custom loading component for lazy-loaded sections
+const SectionSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4"></div>
+    <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0" style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}>
+          <div className="aspect-square bg-gray-300 dark:bg-gray-600"></div>
+          <div className="p-3">
+            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+            <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Dynamically import Lucide React icons with SSR disabled to prevent hydration errors
+const ChevronLeft = dynamic(() => import('lucide-react').then(mod => mod.ChevronLeft), { ssr: false });
+const ChevronRight = dynamic(() => import('lucide-react').then(mod => mod.ChevronRight), { ssr: false });
 
 export default function HomePage() {
   // State to store the personality type from URL or localStorage
   const [personalityType, setPersonalityType] = useState<string | null>(null);
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
   
+  // State to track if component is mounted (client-side only)
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Define types for music recommendations
+  type MusicTrack = {
+    title: string;
+    artist: string;
+    imageUrl: string;
+  };
+
+  type APITrack = {
+    name?: string;
+    artist?: string;
+    image?: string;
+    id?: string;
+  };
+
+  type MusicRecommendations = {
+    tracks?: APITrack[];
+  };
+
+  // State for music recommendations
+  const [musicRecommendations, setMusicRecommendations] = useState<MusicRecommendations | null>(null);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
+
   useEffect(() => {
     // Check if we have a personality type in localStorage
     const storedType = localStorage.getItem('personalityType');
     if (storedType) {
       setPersonalityType(storedType);
       setHasCompletedQuiz(true);
+      
+      // Try to get music recommendations from localStorage
+      try {
+        const storedRecommendations = localStorage.getItem('musicRecommendations');
+        if (storedRecommendations) {
+          console.log('Found recommendations in localStorage:', storedRecommendations);
+          const parsedRecommendations = JSON.parse(storedRecommendations);
+          setMusicRecommendations({ tracks: parsedRecommendations });
+        } else {
+          console.log('No recommendations found in localStorage');
+        }
+      } catch (error) {
+        console.error('Error loading recommendations from localStorage:', error);
+      }
     }
+    
+    // Set mounted state to true
+    setIsMounted(true);
+    setIsLoadingRecommendations(false);
   }, []);
+
+  // Default fallback data for the music cards if API recommendations aren't available
+  const defaultMusicItem: MusicTrack = {
+    title: "Midnight Dreams",
+    artist: "Ambient Collective",
+    imageUrl: "/images/midnight-dreams.png"
+  };
   
-  // Sample data for the music cards
-  const chillVibes = Array(6).fill({
-    title: "Midnight Dreams",
-    artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
-  });
-
-  const personalizedPicks = Array(6).fill({
-    title: "Midnight Dreams",
-    artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
-  });
-
-  const focusMode = Array(6).fill({
-    title: "Midnight Dreams",
-    artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
-  });
+  // Process recommendations from API or use fallbacks
+  const getRecommendedTracks = (): MusicTrack[] => {
+    if (musicRecommendations?.tracks && musicRecommendations.tracks.length > 0) {
+      console.log('Using API recommendations in Home page:', musicRecommendations.tracks);
+      return musicRecommendations.tracks.map((track: APITrack) => ({
+        title: track.name || 'Unknown Track',
+        artist: track.artist || 'Unknown Artist',
+        imageUrl: track.image || '/images/midnight-dreams.png'
+      }));
+    }
+    console.log('No API recommendations available, using default items');
+    return Array(6).fill(defaultMusicItem);
+  };
+  
+  // Distribute tracks across different sections
+  const allTracks = getRecommendedTracks();
+  
+  // Ensure we have enough tracks for all sections
+  while (allTracks.length < 18) {
+    allTracks.push(defaultMusicItem);
+  }
+  
+  // Divide tracks into different categories
+  const personalizedPicks: MusicTrack[] = allTracks.slice(0, 6);
+  const chillVibes: MusicTrack[] = allTracks.slice(6, 12);
+  const focusMode: MusicTrack[] = allTracks.slice(12, 18);
   
   // Map personality types to descriptions
   const personalityDescriptions: Record<string, { title: string, traits: Record<string, number> }> = {
@@ -360,7 +444,7 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Personalized Picks Section */}
+          {/* Personalized Picks Section - Above the fold, no lazy loading needed */}
           <section className="mb-8 sm:mb-12 mt-12">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
               <h2 className="text-xl sm:text-2xl font-bold">{personalityType || "INFJ"} Compatible Picks</h2>
@@ -368,51 +452,131 @@ export default function HomePage() {
                 See All
               </Link>
             </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {personalizedPicks.map((item, index) => (
-                <div key={`personalized-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+            <div className="relative group">
+              {/* Left scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('compatible-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
+              
+              <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {personalizedPicks.map((item: MusicTrack, index: number) => (
+                    <div 
+                      key={`personalized-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('compatible-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
             </div>
           </section>
 
           {/* Chill Vibes Section */}
           <section className="mb-8 sm:mb-12">
-            <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold">Chill Vibes</h2>
-              <Link href="/playlists/chill" className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
-                See All
-              </Link>
-            </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {chillVibes.map((item, index) => (
-                <div key={`chill-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">Chill Vibes</h2>
+                <Link href="/playlists/chill" className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+                  See All
+                </Link>
+              </div>
+              <div className="relative group">
+              {/* Left scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('chill-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
+              
+              <div id="chill-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {chillVibes.map((item: MusicTrack, index: number) => (
+                    <div 
+                      key={`chill-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('chill-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
             </div>
           </section>
 
@@ -424,23 +588,63 @@ export default function HomePage() {
                 See All
               </Link>
             </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {focusMode.map((item, index) => (
-                <div key={`focus-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+            <div className="relative group">
+              {/* Left scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('focus-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
+              
+              <div id="focus-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {focusMode.map((item: MusicTrack, index: number) => (
+                    <div 
+                      key={`focus-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                    const container = document.getElementById('focus-scroll-container');
+                    if (container) {
+                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
             </div>
           </section>
         </div>

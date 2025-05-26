@@ -10,42 +10,42 @@ const playlistData = {
       {
         title: "Midnight Dreams",
         artist: "Ambient Collective",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Ocean Waves",
         artist: "Nature Sounds",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Gentle Rain",
         artist: "Ambient Collective",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Sunset Meditation",
         artist: "Chill Wave",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Mountain Air",
         artist: "Nature Sounds",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Floating Clouds",
         artist: "Ambient Dreams",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Peaceful Mind",
         artist: "Zen Masters",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Starlight Journey",
         artist: "Night Vibes",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       }
     ]
   },
@@ -102,42 +102,42 @@ const playlistData = {
       {
         title: "Minimal Focus",
         artist: "Ambient Works",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Pure Focus",
         artist: "Deep Work",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Flow State",
         artist: "Mind Flow",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Deep Dive",
         artist: "Work Flow",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Intense Focus",
         artist: "Deep Mind",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Peak Performance",
         artist: "Flow Masters",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Maximum Focus",
         artist: "Deep State",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       },
       {
         title: "Zen Mode",
         artist: "Focus Masters",
-        imageUrl: "/images/midnight-dreams.jpg"
+        imageUrl: "/images/midnight-dreams.png"
       }
     ]
   },

@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import "../../styles/test.css";
 import "../../styles/responsive.css";
+
+// Add custom CSS for hiding scrollbars while allowing scrolling
+import "../../styles/scrollbar-hide.css";
 
 export default function HomePage() {
   // State to store the personality type from URL or localStorage
@@ -368,23 +372,59 @@ export default function HomePage() {
                 See All
               </Link>
             </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {personalizedPicks.map((item, index) => (
-                <div key={`personalized-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+            <div className="relative group">
+              {/* Left scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('compatible-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: -220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
+              
+              <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {personalizedPicks.map((item, index) => (
+                    <div 
+                      key={`personalized-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('compatible-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: 220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
             </div>
           </section>
 
@@ -396,23 +436,59 @@ export default function HomePage() {
                 See All
               </Link>
             </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {chillVibes.map((item, index) => (
-                <div key={`chill-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+            <div className="relative group">
+              {/* Left scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('chill-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: -220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
+              
+              <div id="chill-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {chillVibes.map((item, index) => (
+                    <div 
+                      key={`chill-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('chill-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: 220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
             </div>
           </section>
 
@@ -424,23 +500,59 @@ export default function HomePage() {
                 See All
               </Link>
             </div>
-            <div className="music-grid grid grid-cols-1 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 xxs:gap-3 sm:gap-4">
-              {focusMode.map((item, index) => (
-                <div key={`focus-${index}`} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow min-w-0">
-                  <div className="relative aspect-square">
-                    <Image 
-                      src={item.imageUrl} 
-                      alt={item.title} 
-                      fill 
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                  </div>
+            <div className="relative group">
+              {/* Left scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('focus-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: -220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
+              
+              <div id="focus-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {focusMode.map((item, index) => (
+                    <div 
+                      key={`focus-${index}`} 
+                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                    >
+                      <div className="relative aspect-square">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title} 
+                          fill 
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-2 sm:p-3">
+                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              {/* Right scroll button */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('focus-scroll-container');
+                  if (container) {
+                    container.scrollBy({ left: 220, behavior: 'smooth' });
+                  }
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </button>
             </div>
           </section>
         </div>

@@ -30,7 +30,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 w-full backdrop-blur-lg shadow-sm border-b border-gray-200 dark:border-transparent dark:shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.1)]">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full backdrop-blur-lg shadow-sm dark:border-transparent dark:shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.1)]">
         <div className="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 z-20">
@@ -53,6 +53,9 @@ export default function Header() {
             <Link href="/take-quiz" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
               Take Quiz
             </Link>
+            <Link href="/results" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
+              Results
+            </Link>
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="p-2 rounded-full hover:bg-muted transition-colors"
@@ -70,10 +73,10 @@ export default function Header() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2 z-20">
+          <div className="flex md:hidden items-center gap-2 z-50 relative">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-black/20 transition-colors backdrop-blur-sm"
               aria-label="Toggle dark mode"
             >
               {mounted ? (
@@ -81,13 +84,12 @@ export default function Header() {
                   <Sun className="h-5 w-5" /> : 
                   <Moon className="h-5 w-5" />
               ) : (
-                // Render an empty div with the same dimensions during SSR to prevent layout shift
                 <div className="h-5 w-5" />
               )}
             </button>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              className="p-1.5 rounded-full hover:bg-white/20 dark:hover:bg-black/20 transition-colors backdrop-blur-sm"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? 
@@ -97,29 +99,59 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Mobile Menu */}
-          <div 
-            className={`fixed inset-0 bg-background/95 backdrop-blur-sm flex flex-col items-end pt-20 transition-all duration-300 ease-in-out z-10 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          
+        </div>
+      </header>
+      {/* Mobile Sidebar */}
+      <div 
+            className={`md:hidden fixed inset-y-0 right-0 w-2/3 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 shadow-lg transform transition-transform duration-300 ease-out ${
+              isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            } z-50`}
           >
-            <div className="flex flex-col items-start space-y-4 sm:space-y-6 md:space-y-8"> 
+            {/* Close button */}
+            <div className="flex justify-between items-center p-2.5 border-b border-gray-200 dark:border-gray-800">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Menu Items */}
+            <nav className="flex flex-col py-6">
               <Link 
                 href="/Home" 
-                className="text-base sm:text-lg md:text-xl font-medium hover:text-primary transition-colors"
+                className="px-6 py-3 text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link 
                 href="/take-quiz" 
-                className="text-base sm:text-lg md:text-xl font-medium hover:text-primary transition-colors"
+                className="px-6 py-3 text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Take Quiz
               </Link>
-            </div>
+              <Link 
+                href="/results" 
+                className="px-6 py-3 text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Results
+              </Link>
+            </nav>
           </div>
-        </div>
-      </header>
+
+          {/* Overlay */}
+          <div
+            className={`md:hidden fixed inset-0 bg-black/50 transition-opacity duration-300 ${
+              isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            } z-40`}
+            onClick={() => setIsMenuOpen(false)}
+          />
       {/* Spacer to prevent content from going under fixed header */}
       <div className="h-14 sm:h-16 md:h-[60px]" />
     </>

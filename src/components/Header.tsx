@@ -5,10 +5,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Moon, Sun, Menu, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 
 export default function Header() {
   const { theme, setTheme } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  
+  // After mounting, we can safely show the UI that depends on the theme
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
@@ -51,10 +58,14 @@ export default function Header() {
               className="p-2 rounded-full hover:bg-muted transition-colors"
               aria-label="Toggle dark mode"
             >
-              {theme === 'dark' ? 
-                <Sun className="h-5 w-5" /> : 
-                <Moon className="h-5 w-5" />
-              }
+              {mounted ? (
+                theme === 'dark' ? 
+                  <Sun className="h-5 w-5" /> : 
+                  <Moon className="h-5 w-5" />
+              ) : (
+                // Render an empty div with the same dimensions during SSR to prevent layout shift
+                <div className="h-5 w-5" />
+              )}
             </button>
           </nav>
 
@@ -65,10 +76,14 @@ export default function Header() {
               className="p-1.5 rounded-full hover:bg-muted transition-colors"
               aria-label="Toggle dark mode"
             >
-              {theme === 'dark' ? 
-                <Sun className="h-5 w-5" /> : 
-                <Moon className="h-5 w-5" />
-              }
+              {mounted ? (
+                theme === 'dark' ? 
+                  <Sun className="h-5 w-5" /> : 
+                  <Moon className="h-5 w-5" />
+              ) : (
+                // Render an empty div with the same dimensions during SSR to prevent layout shift
+                <div className="h-5 w-5" />
+              )}
             </button>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}

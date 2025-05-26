@@ -25,19 +25,19 @@ export default function HomePage() {
   const chillVibes = Array(6).fill({
     title: "Midnight Dreams",
     artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
+    imageUrl: "/images/midnight-dreams.png"
   });
 
   const personalizedPicks = Array(6).fill({
     title: "Midnight Dreams",
     artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
+    imageUrl: "/images/midnight-dreams.png"
   });
 
   const focusMode = Array(6).fill({
     title: "Midnight Dreams",
     artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.jpg"
+    imageUrl: "/images/midnight-dreams.png"
   });
   
   // Map personality types to descriptions

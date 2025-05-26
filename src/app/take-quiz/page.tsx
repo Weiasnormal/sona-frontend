@@ -178,36 +178,36 @@ export default function QuizPage() {
   return (
     <>
       <Header />
-      <main className="flex-1 w-full bg-gradient-to-b from-red-400 to-red-500 min-h-screen overflow-x-hidden">
+      <main className="flex-1 w-full bg-gradient-to-b from-red-400 to-red-500 dark:from-[#1C81E7] dark:to-[#1C81E7]/80 min-h-screen overflow-x-hidden">
         <div className="relative w-full">
           {/* Wave-like shape at the bottom */}
           <div className="absolute bottom-0 w-full">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full">
-              <path fill="#ffffff" fillOpacity="1" d="M0,96L80,106.7C160,117,320,139,480,149.3C640,160,800,160,960,138.7C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+              <path fill="currentColor" className="text-white dark:text-gray-900" fillOpacity="1" d="M0,96L80,106.7C160,117,320,139,480,149.3C640,160,800,160,960,138.7C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
             </svg>
           </div>
           
           {/* Content */}
-          <div className="container mx-auto px-4 pt-20 pb-40 text-center text-white relative z-10">
+          <div className="container mx-auto px-4 pt-20 pb-40 text-center from-black to-white relative z-10">
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">Tune Into Your Personality</h1>
             <p className="text-xl mb-8">Your traits. Your tunes.</p>
           </div>
         </div>
         
         <div className="container mx-auto px-4 -mt-32 relative z-20 pb-20">
-          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-4xl mx-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 sm:p-8 max-w-4xl mx-auto">
             {!quizComplete ? (
               <div>
                 {/* Question */}
-                <h2 className="text-gray-700 text-xl sm:text-2xl font-bold text-center mb-8">
+                <h2 className="text-gray-700 dark:text-gray-200 text-xl sm:text-2xl font-bold text-center mb-8">
                   {questions[currentQuestion].text}
                 </h2>
                 
                 {/* Answer options */}
-                <div className=" text-gray-700 space-y-4">
+                <div className="text-gray-700 dark:text-gray-300 space-y-4">
                   {questions[currentQuestion].options.map((option) => (
                     <button key={option.id} onClick={() => handleAnswer(option.scores)}
-                    className="font-semibold w-full text-left p-4 border border-gray-300 rounded-lg hover:bg-red-50 transition-colors">
+                    className="font-semibold w-full text-left p-4 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-red-50 dark:hover:bg-[#1C81E7]/20 transition-colors">
                       
                       {option.text}
                     </button>
@@ -216,13 +216,13 @@ export default function QuizPage() {
                 
                 {/* Progress indicator */}
                 <div className="mt-8">
-                  <div className="flex justify-between text-sm mb-2">
+                  <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300 mb-2">
                     <span>Question {currentQuestion + 1} of {questions.length}</span>
                     <span>{progress}% Complete</span>
                   </div>
-                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-red-500 rounded-full transition-all duration-500" 
+                      className="h-full bg-red-500 dark:bg-[#1C81E7] rounded-full transition-all duration-500" 
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
@@ -230,12 +230,12 @@ export default function QuizPage() {
               </div>
             ) : (
               <div className="text-center">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-4">Your Personality Type</h2>
-                <div className="inline-block bg-red-100 rounded-full px-6 py-4 mb-6">
-                  <h3 className="text-4xl sm:text-5xl font-bold text-red-600">{personalityType}</h3>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100">Your Personality Type</h2>
+                <div className="inline-block bg-red-100 dark:bg-[#1C81E7]/20 rounded-full px-6 py-4 mb-6">
+                  <h3 className="text-4xl sm:text-5xl font-bold text-red-600 dark:text-[#1C81E7]">{personalityType}</h3>
                 </div>
-                <p className="mb-6 text-gray-700">Based on your answers, we've created personalized music recommendations for you.</p>
-                <Link href="/Home" className="inline-block bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-6 rounded-full transition-colors">
+                <p className="mb-6 text-gray-700 dark:text-gray-300">Based on your answers, we've created personalized music recommendations for you.</p>
+                <Link href="/Home" className="inline-block bg-red-500 hover:bg-red-600 dark:bg-[#1C81E7] dark:hover:bg-[#1C81E7]/80 text-white font-medium py-3 px-6 rounded-full transition-colors">
                   See Your Music Recommendations
                 </Link>
               </div>

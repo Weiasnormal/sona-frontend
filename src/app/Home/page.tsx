@@ -76,7 +76,19 @@ export default function HomePage() {
         if (storedRecommendations) {
           console.log('Found recommendations in localStorage:', storedRecommendations);
           const parsedRecommendations = JSON.parse(storedRecommendations);
-          setMusicRecommendations({ tracks: parsedRecommendations });
+          
+          // Check if parsedRecommendations is already an array or if it's nested in an object
+          if (Array.isArray(parsedRecommendations)) {
+            // If it's already an array, use it directly
+            setMusicRecommendations({ tracks: parsedRecommendations });
+          } else if (parsedRecommendations.tracks && Array.isArray(parsedRecommendations.tracks)) {
+            // If it has a tracks property that's an array, use that
+            setMusicRecommendations(parsedRecommendations);
+          } else {
+            // Fallback for any other structure
+            console.log('Recommendations found but in unexpected format:', parsedRecommendations);
+            setMusicRecommendations({ tracks: [parsedRecommendations] });
+          }
         } else {
           console.log('No recommendations found in localStorage');
         }

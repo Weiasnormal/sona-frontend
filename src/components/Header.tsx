@@ -52,10 +52,7 @@ export default function Header() {
             </Link>
             <Link href="/take-quiz" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
               Take Quiz
-            </Link>
-            <Link href="/results" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
-              Results
-            </Link>
+            </Link>            
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="p-2 rounded-full hover:bg-muted transition-colors"
@@ -134,14 +131,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Take Quiz
-              </Link>
-              <Link 
-                href="/results" 
-                className="px-6 py-3 text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Results
-              </Link>
+              </Link>             
             </nav>
           </div>
 

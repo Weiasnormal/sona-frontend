@@ -262,15 +262,15 @@ export async function sendMBTIData(mbtiData: {
   console.log('Attempting to call the Sona API...');
   
   try {
-    // Prepare the request body with capitalized field names to match backend expectations
+    // Prepare the request body with lowercase field names to match API expectations
     const requestBody = {
-      Mbti: mbtiData.mbti,
-      Function_pair: mbtiData.function_pair,
-      Danceablitiy: mbtiData.danceablitiy, // Note: Both frontend and backend have this typo
-      Liveliness: mbtiData.liveliness,
-      Valance: mbtiData.valance,
-      Energy: mbtiData.energy,
-      Instrumentalness: mbtiData.instrumentalness,
+      mbti: mbtiData.mbti,
+      function_pair: mbtiData.function_pair,
+      danceablitiy: mbtiData.danceablitiy, // Note: Both frontend and backend have this typo
+      liveliness: mbtiData.liveliness,
+      valance: mbtiData.valance,
+      energy: mbtiData.energy,
+      instrumentalness: mbtiData.instrumentalness,
       Loudness: mbtiData.loudness,
       Tempo: mbtiData.tempo
     };
@@ -286,7 +286,7 @@ export async function sendMBTIData(mbtiData: {
         },
         body: JSON.stringify(requestBody),
         // Add mode: 'cors' to explicitly handle CORS
-        mode: 'cors',
+        mode: 'no-cors',
         // Increase timeout to 30 seconds
         signal: AbortSignal.timeout(30000), // 30 second timeout
       });

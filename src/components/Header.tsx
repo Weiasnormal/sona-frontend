@@ -50,8 +50,8 @@ export default function Header() {
             <Link href="/Home" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
               Home
             </Link>
-            <Link href="/take-quiz" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
-              Take Quiz
+            <Link href="/mbti-selection" className="text-sm lg:text-base font-medium hover:text-primary transition-colors">
+              Discover Music
             </Link>            
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -126,11 +126,11 @@ export default function Header() {
                 Home
               </Link>
               <Link 
-                href="/take-quiz" 
+                href="/mbti-selection" 
                 className="px-6 py-3 text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Take Quiz
+                Discover Music
               </Link>             
             </nav>
           </div>

@@ -7,134 +7,221 @@ import "../../styles/responsive.css";
 import { sendMBTIData, getFunctionPair } from '@/utils/api';
 
 // Define the quiz questions with their scoring values
+// Scores array format: [Openness, Conscientiousness, Extraversion, Agreeableness]
+// Higher scores increase likelihood of: [N, J, E, F] respectively
 const questions = [
   {
     id: 1,
     text: "I enjoy trying new foods and traveling to unfamiliar places.",
     options: [
-      { id: "A", text: "I always look for new experiences and destinations.", scores: [0.9, 0.1, 0.2, 0.1] },
-      { id: "B", text: "I like travel but prefer familiar routines.", scores: [0.3, 0.4, 0.3, 0.3] },
-      { id: "C", text: "I rarely travel or try unfamiliar things.", scores: [0.1, 0.9, 0.2, 0.1] },
-      { id: "D", text: "I prefer to stay local and follow my usual habits.", scores: [0.2, 0.2, 0.8, 0.5] }
+      { id: "A", text: "I constantly seek out new experiences and exotic destinations.", scores: [0.8, 0.3, 0.6, 0.6] },
+      { id: "B", text: "I enjoy exploring new places but like some familiarity.", scores: [0.6, 0.4, 0.5, 0.5] },
+      { id: "C", text: "I'm neutral about trying new things versus sticking to what I know.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "I prefer familiar places with occasional new experiences.", scores: [0.4, 0.6, 0.4, 0.5] },
+      { id: "E", text: "I strongly prefer my established routines and familiar environments.", scores: [0.2, 0.7, 0.3, 0.4] }
     ]
   },
   {
     id: 2,
-    text: "I prefer plans and routines over spontaneous decisions.",
+    text: "When making decisions, I tend to:",
     options: [
-      { id: "A", text: "I like everything scheduled and organized ahead of time.", scores: [0.2, 0.9, 0.1, 0.2] },
-      { id: "B", text: "I generally follow plans but allow some flexibility.", scores: [0.1, 0.8, 0.2, 0.2] },
-      { id: "C", text: "I sometimes plan, but I enjoy acting on impulse.", scores: [0.6, 0.2, 0.1, 0.3] },
-      { id: "D", text: "I dislike strict routines and often go with the flow.", scores: [0.1, 0.1, 0.6, 0.3] }
+      { id: "A", text: "Follow a strict plan and detailed schedule.", scores: [0.3, 0.8, 0.3, 0.4] },
+      { id: "B", text: "Have a general plan but remain flexible.", scores: [0.4, 0.6, 0.4, 0.5] },
+      { id: "C", text: "Balance planning with spontaneity equally.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Mostly go with the flow but have some loose guidelines.", scores: [0.6, 0.4, 0.6, 0.5] },
+      { id: "E", text: "Act completely spontaneously and adapt as I go.", scores: [0.7, 0.2, 0.7, 0.6] }
     ]
   },
   {
     id: 3,
-    text: "I feel energized when I'm around other people.",
+    text: "In social situations, I typically:",
     options: [
-      { id: "A", text: "I thrive in social settings and love meeting new people.", scores: [0.2, 0.2, 0.9, 0.2] },
-      { id: "B", text: "I enjoy being social but need some alone time.", scores: [0.2, 0.3, 0.6, 0.3] },
-      { id: "C", text: "I'm social in small groups or familiar settings.", scores: [0.4, 0.1, 0.2, 0.8] },
-      { id: "D", text: "I prefer quiet and solitary environments.", scores: [0.1, 0.2, 0.2, 0.9] }
+      { id: "A", text: "Feel energized and seek to be the center of attention.", scores: [0.5, 0.4, 0.8, 0.6] },
+      { id: "B", text: "Enjoy socializing with many people but don't need the spotlight.", scores: [0.5, 0.5, 0.7, 0.6] },
+      { id: "C", text: "Feel comfortable in both social and solitary settings equally.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Prefer small groups or one-on-one interactions.", scores: [0.5, 0.5, 0.3, 0.5] },
+      { id: "E", text: "Feel drained by social interaction and prefer being alone.", scores: [0.5, 0.5, 0.2, 0.4] }
     ]
   },
   {
     id: 4,
-    text: "I often reflect on abstract ideas and theories.",
+    text: "When thinking about concepts and ideas, I prefer:",
     options: [
-      { id: "A", text: "I enjoy discussing and thinking about abstract topics.", scores: [0.9, 0.2, 0.2, 0.2] },
-      { id: "B", text: "I'm curious but mostly focus on practical things.", scores: [0.3, 0.4, 0.1, 0.2] },
-      { id: "C", text: "I find abstract thinking interesting but hard to apply.", scores: [0.8, 0.1, 0.1, 0.2] },
-      { id: "D", text: "I prefer concrete facts and real-world issues.", scores: [0.2, 0.2, 0.2, 0.6] }
+      { id: "A", text: "Exploring theoretical possibilities and abstract concepts.", scores: [0.8, 0.4, 0.5, 0.6] },
+      { id: "B", text: "Considering innovative ideas with some practical applications.", scores: [0.7, 0.5, 0.5, 0.5] },
+      { id: "C", text: "Balancing theoretical and practical considerations equally.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Focusing on practical applications with some theory.", scores: [0.3, 0.6, 0.5, 0.4] },
+      { id: "E", text: "Dealing exclusively with concrete facts and proven methods.", scores: [0.2, 0.7, 0.5, 0.3] }
     ]
   },
   {
     id: 5,
-    text: "I'm usually on time and well-organized.",
+    text: "When it comes to organization and structure:",
     options: [
-      { id: "A", text: "I'm very punctual and organized in everything I do.", scores: [0.1, 0.9, 0.1, 0.2] },
-      { id: "B", text: "I make an effort to stay on time and organized.", scores: [0.2, 0.8, 0.1, 0.2] },
-      { id: "C", text: "I can be organized when needed but often improvise.", scores: [0.3, 0.7, 0.2, 0.2] },
-      { id: "D", text: "I'm more spontaneous and less focused on structure.", scores: [0.4, 0.6, 0.2, 0.2] }
+      { id: "A", text: "I'm extremely organized with detailed plans for everything.", scores: [0.3, 0.8, 0.4, 0.5] },
+      { id: "B", text: "I'm generally organized but can adapt when needed.", scores: [0.4, 0.7, 0.5, 0.5] },
+      { id: "C", text: "I have moderate organization with some flexibility.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "I prefer flexibility with minimal structure.", scores: [0.6, 0.3, 0.5, 0.5] },
+      { id: "E", text: "I avoid structure and prefer complete spontaneity.", scores: [0.7, 0.2, 0.6, 0.6] }
     ]
   },
   {
     id: 6,
-    text: "I enjoy being in leadership or center-of-attention roles.",
+    text: "When it comes to leadership roles:",
     options: [
-      { id: "A", text: "I love leading and being in the spotlight.", scores: [0.1, 0.1, 0.9, 0.3] },
-      { id: "B", text: "I lead when needed but don't seek attention.", scores: [0.2, 0.2, 0.7, 0.2] },
-      { id: "C", text: "I'm confident in groups but prefer shared attention.", scores: [0.3, 0.3, 0.6, 0.2] },
-      { id: "D", text: "I prefer to stay in the background.", scores: [0.2, 0.2, 0.3, 0.8] }
+      { id: "A", text: "I naturally take charge and enjoy directing others.", scores: [0.5, 0.6, 0.9, 0.4] },
+      { id: "B", text: "I'm comfortable leading when necessary.", scores: [0.5, 0.6, 0.7, 0.5] },
+      { id: "C", text: "I can lead or follow depending on the situation.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "I prefer to support rather than lead.", scores: [0.5, 0.4, 0.3, 0.6] },
+      { id: "E", text: "I actively avoid leadership positions.", scores: [0.5, 0.3, 0.1, 0.7] }
     ]
   },
   {
     id: 7,
-    text: "I get along well with most people, even strangers.",
+    text: "When interacting with others, I tend to:",
     options: [
-      { id: "A", text: "I easily connect with almost anyone.", scores: [0.2, 0.2, 0.2, 0.9] },
-      { id: "B", text: "I'm friendly and open to new people.", scores: [0.2, 0.2, 0.3, 0.8] },
-      { id: "C", text: "I'm polite but take time to warm up.", scores: [0.2, 0.2, 0.4, 0.6] },
-      { id: "D", text: "I tend to keep to myself.", scores: [0.2, 0.2, 0.5, 0.5] }
+      { id: "A", text: "Connect deeply and empathize strongly with their feelings.", scores: [0.5, 0.4, 0.6, 0.9] },
+      { id: "B", text: "Listen with empathy while maintaining some objectivity.", scores: [0.5, 0.5, 0.5, 0.7] },
+      { id: "C", text: "Balance emotional understanding with logical analysis.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Focus more on facts and logic than emotions.", scores: [0.5, 0.6, 0.4, 0.3] },
+      { id: "E", text: "Prioritize objective truth over emotional considerations.", scores: [0.5, 0.7, 0.3, 0.1] }
     ]
   },
   {
     id: 8,
-    text: "I like to explore philosophical or imaginative ideas.",
+    text: "When solving problems, I prefer to:",
     options: [
-      { id: "A", text: "I often think deeply and creatively about life.", scores: [0.9, 0.1, 0.1, 0.2] },
-      { id: "B", text: "I enjoy deep thinking when I have time.", scores: [0.8, 0.2, 0.2, 0.2] },
-      { id: "C", text: "I think imaginatively but prefer hands-on ideas.", scores: [0.7, 0.1, 0.3, 0.2] },
-      { id: "D", text: "I don't spend much time on abstract ideas.", scores: [0.6, 0.1, 0.2, 0.3] }
+      { id: "A", text: "Explore multiple innovative possibilities and patterns.", scores: [0.9, 0.4, 0.5, 0.5] },
+      { id: "B", text: "Consider new approaches while drawing on what's worked before.", scores: [0.7, 0.5, 0.5, 0.5] },
+      { id: "C", text: "Use a mix of creative and traditional methods equally.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Rely on proven methods with some room for innovation.", scores: [0.3, 0.6, 0.5, 0.5] },
+      { id: "E", text: "Follow established procedures and practical solutions.", scores: [0.1, 0.7, 0.5, 0.5] }
     ]
   },
   {
     id: 9,
-    text: "I prefer to follow rules and standards strictly.",
+    text: "Regarding rules and procedures, I typically:",
     options: [
-      { id: "A", text: "I always follow rules and expect others to.", scores: [0.1, 0.9, 0.1, 0.2] },
-      { id: "B", text: "I mostly follow rules but sometimes bend them.", scores: [0.1, 0.8, 0.2, 0.2] },
-      { id: "C", text: "I follow rules only when they make sense to me.", scores: [0.1, 0.7, 0.3, 0.2] },
-      { id: "D", text: "I don't like strict rules and prefer independence.", scores: [0.1, 0.6, 0.4, 0.2] }
+      { id: "A", text: "Follow them strictly and expect others to do the same.", scores: [0.3, 0.9, 0.4, 0.4] },
+      { id: "B", text: "Generally adhere to them with occasional exceptions.", scores: [0.4, 0.7, 0.5, 0.5] },
+      { id: "C", text: "Follow important ones but question those that seem unnecessary.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Often find my own approach to achieving the same goals.", scores: [0.6, 0.3, 0.6, 0.6] },
+      { id: "E", text: "Prefer to create my own path rather than follow established rules.", scores: [0.7, 0.1, 0.7, 0.7] }
     ]
   },
   {
     id: 10,
-    text: "I'm comfortable with small talk and social gatherings.",
+    text: "My ideal social environment is:",
     options: [
-      { id: "A", text: "I love socializing and meeting new people.", scores: [0.2, 0.2, 0.8, 0.3] },
-      { id: "B", text: "I enjoy chatting in most group settings.", scores: [0.2, 0.2, 0.7, 0.4] },
-      { id: "C", text: "I'm okay with social events but get tired quickly.", scores: [0.2, 0.2, 0.6, 0.5] },
-      { id: "D", text: "I prefer quiet time and minimal social interaction.", scores: [0.2, 0.2, 0.5, 0.6] }
+      { id: "A", text: "Large gatherings where I can meet many new people.", scores: [0.5, 0.4, 0.9, 0.6] },
+      { id: "B", text: "Social events with a mix of familiar faces and new people.", scores: [0.5, 0.5, 0.7, 0.6] },
+      { id: "C", text: "Balanced between social time and alone time.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Small gatherings with close friends or family.", scores: [0.5, 0.6, 0.3, 0.4] },
+      { id: "E", text: "Quiet environments with minimal social interaction.", scores: [0.5, 0.7, 0.1, 0.3] }
+    ]
+  },
+  {
+    id: 11,
+    text: "When making decisions that affect others, I prioritize:",
+    options: [
+      { id: "A", text: "People's feelings and maintaining harmony above all.", scores: [0.5, 0.4, 0.5, 0.9] },
+      { id: "B", text: "The wellbeing of people while considering practical factors.", scores: [0.5, 0.5, 0.5, 0.7] },
+      { id: "C", text: "A balance between people's needs and objective criteria.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Logical analysis with some consideration for feelings.", scores: [0.5, 0.6, 0.5, 0.3] },
+      { id: "E", text: "Objective truth and fairness regardless of emotional impact.", scores: [0.5, 0.7, 0.5, 0.1] }
+    ]
+  },
+  {
+    id: 12,
+    text: "When starting a new project, I prefer to:",
+    options: [
+      { id: "A", text: "Have a detailed plan with clear milestones and deadlines.", scores: [0.4, 0.9, 0.5, 0.5] },
+      { id: "B", text: "Create an outline with room for adjustments as needed.", scores: [0.5, 0.7, 0.5, 0.5] },
+      { id: "C", text: "Have a general direction but remain adaptable.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Start working and let the plan evolve naturally.", scores: [0.6, 0.3, 0.5, 0.5] },
+      { id: "E", text: "Jump in and figure things out as I go along.", scores: [0.7, 0.1, 0.5, 0.5] }
+    ]
+  },
+  {
+    id: 13,
+    text: "I find my energy is most depleted after:",
+    options: [
+      { id: "A", text: "Spending time alone with limited social interaction.", scores: [0.5, 0.5, 0.9, 0.5] },
+      { id: "B", text: "Having some alone time with occasional interaction.", scores: [0.5, 0.5, 0.7, 0.5] },
+      { id: "C", text: "A balanced mix of social and solitary activities.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Extended social interaction with brief breaks.", scores: [0.5, 0.5, 0.3, 0.5] },
+      { id: "E", text: "Prolonged social events with many people.", scores: [0.5, 0.5, 0.1, 0.5] }
+    ]
+  },
+  {
+    id: 14,
+    text: "When learning something new, I prefer to:",
+    options: [
+      { id: "A", text: "Understand the big picture concepts and underlying patterns.", scores: [0.9, 0.5, 0.5, 0.5] },
+      { id: "B", text: "Grasp the theory while seeing some practical examples.", scores: [0.7, 0.5, 0.5, 0.5] },
+      { id: "C", text: "Balance theoretical understanding with practical application.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Learn through hands-on practice with some theory.", scores: [0.3, 0.5, 0.5, 0.5] },
+      { id: "E", text: "Focus entirely on practical skills and real-world application.", scores: [0.1, 0.5, 0.5, 0.5] }
+    ]
+  },
+  {
+    id: 15,
+    text: "In a disagreement, I typically:",
+    options: [
+      { id: "A", text: "Prioritize maintaining harmony even if it means compromising my position.", scores: [0.5, 0.5, 0.5, 0.9] },
+      { id: "B", text: "Try to find common ground while expressing my perspective.", scores: [0.5, 0.5, 0.5, 0.7] },
+      { id: "C", text: "Balance logical arguments with consideration for others' feelings.", scores: [0.5, 0.5, 0.5, 0.5] },
+      { id: "D", text: "Present logical arguments while acknowledging emotions.", scores: [0.5, 0.5, 0.5, 0.3] },
+      { id: "E", text: "Focus on facts and truth regardless of emotional reactions.", scores: [0.5, 0.5, 0.5, 0.1] }
     ]
   }
 ];
 
 // Function to determine MBTI type based on scores
 const determineMBTI = (scores: number[]) => {
+  // Check if there's a forced MBTI type in localStorage for testing
+  if (typeof window !== 'undefined') {
+    const forcedType = localStorage.getItem('forcedMBTIType');
+    if (forcedType && forcedType.length === 4) {
+      console.log("Using forced MBTI type:", forcedType);
+      return forcedType;
+    }
+  }
+
   // [Openness, Conscientiousness, Extraversion, Agreeableness]
   const [O, C, E, A] = scores;
   
-  // Add some randomness to the thresholds to create more varied results
-  const eThreshold = 0.45 + (Math.random() * 0.1); // Between 0.45 and 0.55
-  const oThreshold = 0.45 + (Math.random() * 0.1);
-  const aThreshold = 0.45 + (Math.random() * 0.1);
-  const cThreshold = 0.45 + (Math.random() * 0.1);
+  // Normalize scores to a 0-1 scale centered around 0.5
+  // This ensures that the neutral middle option (C) results in a score of 0.5
+  // With 15 questions, the theoretical max raw score would be 15 if all answers were extreme
+  const normalizedO = Math.min(Math.max(O / 15, 0), 1);
+  const normalizedC = Math.min(Math.max(C / 15, 0), 1);
+  const normalizedE = Math.min(Math.max(E / 15, 0), 1);
+  const normalizedA = Math.min(Math.max(A / 15, 0), 1);
+  
+  // Adjust thresholds to counter the ENTJ bias
+  // Increase thresholds for E, N, T, J to make them harder to achieve
+  // This means scores need to be higher to get E, N, T, J results
+  const eThreshold = 0.55 + (Math.random() * 0.02 - 0.01); // Between 0.54 and 0.56
+  const oThreshold = 0.55 + (Math.random() * 0.02 - 0.01); // Higher threshold for N
+  const aThreshold = 0.45 + (Math.random() * 0.02 - 0.01); // Lower threshold for F (0.44-0.46)
+  const cThreshold = 0.55 + (Math.random() * 0.02 - 0.01); // Higher threshold for J
   
   // Determine I/E (Introversion/Extraversion)
-  const firstLetter = E > eThreshold ? "E" : "I";
+  const firstLetter = normalizedE > eThreshold ? "E" : "I";
   
   // Determine S/N (Sensing/iNtuition) based on Openness
-  const secondLetter = O > oThreshold ? "N" : "S";
+  const secondLetter = normalizedO > oThreshold ? "N" : "S";
   
   // Determine T/F (Thinking/Feeling) based on Agreeableness
-  const thirdLetter = A > aThreshold ? "F" : "T";
+  const thirdLetter = normalizedA > aThreshold ? "F" : "T";
   
   // Determine J/P (Judging/Perceiving) based on Conscientiousness
-  const fourthLetter = C > cThreshold ? "J" : "P";
+  const fourthLetter = normalizedC > cThreshold ? "J" : "P";
   
   // Log the scores and thresholds for debugging
-  console.log("Scores:", { O, C, E, A });
+  console.log("Raw Scores:", { O, C, E, A });
+  console.log("Normalized Scores:", { normalizedO, normalizedC, normalizedE, normalizedA });
   console.log("Thresholds:", { eThreshold, oThreshold, aThreshold, cThreshold });
   console.log("Resulting type:", `${firstLetter}${secondLetter}${thirdLetter}${fourthLetter}`);
   
@@ -148,7 +235,9 @@ export default function QuizPage() {
   const [personalityType, setPersonalityType] = useState("");
   const [progress, setProgress] = useState(0);
   const [apiCallStatus, setApiCallStatus] = useState<'idle' | 'loading' | 'success' | 'fallback' | 'error'>('idle');
-  
+  const [devMode, setDevMode] = useState(false);
+  const [forcedMBTI, setForcedMBTI] = useState('');
+
   // Handle answer selection
   const handleAnswer = (optionScores: number[]) => {
     // Update scores by adding the option's scores
@@ -161,11 +250,11 @@ export default function QuizPage() {
       const newProgress = Math.round(((currentQuestion + 1) / questions.length) * 100);
       setProgress(newProgress);
     } else {
-      // Normalize scores (divide by number of questions)
-      const normalizedScores = newScores.map(score => score / questions.length);
+      // Use raw scores directly - the determineMBTI function now handles normalization
+      // This ensures proper handling of the 15 questions with 5 options each
       
       // Determine personality type
-      const mbti = determineMBTI(normalizedScores);
+      const mbti = determineMBTI(newScores);
       setPersonalityType(mbti);
       
       // Store the personality type in localStorage
@@ -173,9 +262,12 @@ export default function QuizPage() {
         localStorage.setItem('personalityType', mbti);
       }
       
+      // Log the final scores for debugging
+      console.log("Final raw scores:", newScores);
+      
       // Send MBTI data to the API
       setApiCallStatus('loading');
-      sendMBTIToAPI(mbti, normalizedScores);
+      sendMBTIToAPI(mbti, newScores);
       
       setQuizComplete(true);
     }
@@ -183,6 +275,11 @@ export default function QuizPage() {
 
   // Function to send MBTI data to the API
   const sendMBTIToAPI = async (mbti: string, normalizedScores: number[]) => {
+    // If we're in dev mode and have a forced MBTI type, use that instead
+    if (forcedMBTI && devMode) {
+      mbti = forcedMBTI;
+      console.log(`Using forced MBTI type for API call: ${mbti}`);
+    }
     setApiCallStatus('loading');
     
     try {
@@ -238,6 +335,42 @@ export default function QuizPage() {
       setApiCallStatus('error');
     }
   };
+
+  // Toggle developer mode with keyboard shortcut (Ctrl+Shift+D)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        setDevMode(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Handle forced MBTI type selection
+  const handleForceMBTI = (type: string) => {
+    setForcedMBTI(type);
+    localStorage.setItem('forcedMBTIType', type);
+    console.log(`MBTI type forced to: ${type}`);
+  };
+
+  // Clear forced MBTI type
+  const clearForcedMBTI = () => {
+    setForcedMBTI('');
+    localStorage.removeItem('forcedMBTIType');
+    console.log('Forced MBTI type cleared');
+  };
+
+  // Check for existing forced MBTI on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedType = localStorage.getItem('forcedMBTIType');
+      if (savedType) {
+        setForcedMBTI(savedType);
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -342,6 +475,82 @@ export default function QuizPage() {
               </div>
             )}
           </div>
+          
+          {/* Developer Mode Panel - Only visible when devMode is true */}
+          {devMode && (
+            <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/30 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-300">Developer Mode</h3>
+                <button 
+                  onClick={() => setDevMode(false)}
+                  className="text-xs text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200"
+                >
+                  Hide
+                </button>
+              </div>
+              
+              <div className="mb-3">
+                <p className="text-xs text-yellow-700 dark:text-yellow-400 mb-2">Force MBTI Type (for testing):</p>
+                <div className="grid grid-cols-4 gap-1 mb-2">
+                  {['ISTJ', 'ISFJ', 'INFJ', 'INTJ'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => handleForceMBTI(type)}
+                      className={`text-xs py-1 px-2 rounded ${forcedMBTI === type ? 'bg-yellow-500 text-white' : 'bg-yellow-100 dark:bg-yellow-800/30 text-yellow-800 dark:text-yellow-300'}`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-4 gap-1 mb-2">
+                  {['ISTP', 'ISFP', 'INFP', 'INTP'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => handleForceMBTI(type)}
+                      className={`text-xs py-1 px-2 rounded ${forcedMBTI === type ? 'bg-yellow-500 text-white' : 'bg-yellow-100 dark:bg-yellow-800/30 text-yellow-800 dark:text-yellow-300'}`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-4 gap-1 mb-2">
+                  {['ESTP', 'ESFP', 'ENFP', 'ENTP'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => handleForceMBTI(type)}
+                      className={`text-xs py-1 px-2 rounded ${forcedMBTI === type ? 'bg-yellow-500 text-white' : 'bg-yellow-100 dark:bg-yellow-800/30 text-yellow-800 dark:text-yellow-300'}`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-4 gap-1 mb-2">
+                  {['ESTJ', 'ESFJ', 'ENFJ', 'ENTJ'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => handleForceMBTI(type)}
+                      className={`text-xs py-1 px-2 rounded ${forcedMBTI === type ? 'bg-yellow-500 text-white' : 'bg-yellow-100 dark:bg-yellow-800/30 text-yellow-800 dark:text-yellow-300'}`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex justify-center mt-2">
+                  <button
+                    onClick={clearForcedMBTI}
+                    className="text-xs py-1 px-3 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800/30"
+                  >
+                    Clear Forced Type
+                  </button>
+                </div>
+              </div>
+              
+              <p className="text-xs text-yellow-600 dark:text-yellow-500 italic">
+                Current forced type: {forcedMBTI ? <span className="font-medium">{forcedMBTI}</span> : 'None'}<br/>
+                Press <kbd className="px-1 py-0.5 text-xs rounded bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200">Ctrl+Shift+D</kbd> to toggle developer mode
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </>

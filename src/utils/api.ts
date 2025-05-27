@@ -262,15 +262,15 @@ export async function sendMBTIData(mbtiData: {
   console.log('Attempting to call the Sona API...');
   
   try {
-    // Prepare the request body with lowercase field names to match API expectations
+    // Prepare the request body with properly capitalized field names to match API expectations
     const requestBody = {
-      mbti: mbtiData.mbti,
-      function_pair: mbtiData.function_pair,
-      danceablitiy: mbtiData.danceablitiy, // Note: Both frontend and backend have this typo
-      liveliness: mbtiData.liveliness,
-      valance: mbtiData.valance,
-      energy: mbtiData.energy,
-      instrumentalness: mbtiData.instrumentalness,
+      Mbti: mbtiData.mbti,
+      Function_pair: mbtiData.function_pair,
+      Danceablitiy: mbtiData.danceablitiy, // Note: Both frontend and backend have this typo
+      Liveliness: mbtiData.liveliness,
+      Valance: mbtiData.valance,
+      Energy: mbtiData.energy,
+      Instrumentalness: mbtiData.instrumentalness,
       Loudness: mbtiData.loudness,
       Tempo: mbtiData.tempo
     };
@@ -279,28 +279,47 @@ export async function sendMBTIData(mbtiData: {
     const spotifyResponse = await retryWithBackoff(async () => {
       console.log('Making API request with body:', requestBody);
       
-      const response = await fetch('https://sonaapi.onrender.com/api/MBTI/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        // Add mode: 'cors' to explicitly handle CORS
-        mode: 'no-cors',
-        // Increase timeout to 30 seconds
-        signal: AbortSignal.timeout(30000), // 30 second timeout
-      });
+      try {
+        // First try with CORS mode
+        const response = await fetch('https://sonaapi.onrender.com/api/MBTI/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(requestBody),
+          mode: 'cors',
+          signal: AbortSignal.timeout(15000) // 15 second timeout
+        });
 
-      console.log('API response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        console.log('API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        console.log('Raw API Response:', responseData);
+        
+        return responseData;
+      } catch (corsError) {
+        console.log('CORS request failed, trying no-cors mode as fallback:', corsError);
+        
+        // If CORS fails, try with no-cors as a fallback
+        // Note: With no-cors, we can't read the response, so we'll use our fallback data
+        await fetch('https://sonaapi.onrender.com/api/MBTI/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody),
+          mode: 'no-cors',
+          signal: AbortSignal.timeout(15000) // 15 second timeout
+        });
+        
+        // Since we can't read the response in no-cors mode, throw an error to trigger fallback
+        throw new Error('Using no-cors mode - cannot read response, using fallback data');
       }
-
-      const responseData = await response.json();
-      console.log('Raw API Response:', responseData);
-      
-      return responseData;
     }, 3); // Retry up to 3 times (4 attempts total)
     
     // Transform the Spotify response to our frontend format

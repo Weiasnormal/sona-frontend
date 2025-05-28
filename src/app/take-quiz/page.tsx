@@ -298,16 +298,43 @@ export default function QuizPage() {
       // These are example mappings - you may want to adjust these based on your needs
       const [openness, conscientiousness, extraversion, agreeableness] = normalizedScores;
       
+      // Adjust audio features based on MBTI type
+      let danceability = 0.4 + (extraversion * 0.3);
+      let liveliness = 0.3 + (openness * 0.2);
+      let valance = 0.3 + (agreeableness * 0.3);
+      let energy = 0.4 + (extraversion * 0.4);
+      let instrumentalness = 0.1 + (conscientiousness * 0.1);
+      let loudness = -10 + (extraversion * 5);
+      let tempo = 100 + (openness * 40);
+
+      // Special adjustments for ISTP
+      if (mbti === 'ISTP') {
+        // ISTPs prefer more energetic and dynamic music despite being introverted
+        energy = Math.max(0.6, energy);
+        tempo = Math.max(120, tempo);
+        // They also tend to prefer instrumental music
+        instrumentalness = Math.max(0.4, instrumentalness);
+      }
+      
+      // Special adjustments for ENTJ
+      if (mbti === 'ENTJ') {
+        // ENTJs prefer structured and powerful music
+        energy = Math.max(0.7, energy);
+        valance = Math.max(0.5, valance);
+        // They also tend to prefer faster-paced music
+        tempo = Math.max(130, tempo);
+      }
+
       const mbtiData = {
         mbti: mbti,
         function_pair: getFunctionPair(mbti),
-        danceablitiy: 0.4 + (extraversion * 0.3),  // More extraverted = more danceable
-        liveliness: 0.3 + (openness * 0.2),        // More open = more lively
-        valance: 0.3 + (agreeableness * 0.3),      // More agreeable = more positive valance
-        energy: 0.4 + (extraversion * 0.4),        // More extraverted = more energy
-        instrumentalness: 0.1 + (conscientiousness * 0.1), // More conscientious = more instrumental
-        loudness: -10 + (extraversion * 5),        // More extraverted = louder
-        tempo: 100 + (openness * 40)               // More open = faster tempo
+        danceablitiy: danceability,
+        liveliness: liveliness,
+        valance: valance,
+        energy: energy,
+        instrumentalness: instrumentalness,
+        loudness: loudness,
+        tempo: tempo
       };
       
       // The updated sendMBTIData function will handle retries and fallbacks

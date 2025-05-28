@@ -45,7 +45,12 @@ function generateDetailedMockRecommendations(mbti: string) {
     ];
     
     // Additional tracks based on function pair
-    let specificTracks = [];
+    let specificTracks: Array<{
+      name: string;
+      artist: string;
+      id: string;
+      image: string;
+    }> = [];
     
     if (functionPair === 'NF') {
       specificTracks = [
@@ -86,7 +91,7 @@ function generateDetailedMockRecommendations(mbti: string) {
         { name: 'Reliable Rhythm', artist: 'Dependable', id: 'sf-9', image: '/images/midnight-dreams.png' },
         { name: 'Warm Atmosphere', artist: 'Friendly', id: 'sf-10', image: '/images/midnight-dreams.png' }
       ];
-    } else { // ST
+    } else if (functionPair === 'ST') {
       specificTracks = [
         { name: 'Structured System', artist: 'Organized', id: 'st-1', image: '/images/midnight-dreams.png' },
         { name: 'Practical Solutions', artist: 'Problem Solver', id: 'st-2', image: '/images/midnight-dreams.png' },
@@ -289,7 +294,7 @@ export async function sendMBTIData(mbtiData: {
           },
           body: JSON.stringify(requestBody),
           mode: 'cors',
-          signal: AbortSignal.timeout(15000) // 15 second timeout
+          signal: AbortSignal.timeout(30000) // Increased to 30 second timeout
         });
 
         console.log('API response status:', response.status);
@@ -298,8 +303,34 @@ export async function sendMBTIData(mbtiData: {
           throw new Error(`API error: ${response.status}`);
         }
 
-        const responseData = await response.json();
+        let responseData = await response.json();
         console.log('Raw API Response:', responseData);
+        
+        // Special handling for ISTP and ENTJ
+        if (mbtiData.mbti === 'ISTP' || mbtiData.mbti === 'ENTJ') {
+          console.log(`Special handling for ${mbtiData.mbti} type`);
+          // Add additional retry with increased timeout for these types
+          if (!responseData.tracks || responseData.tracks.length === 0) {
+            console.log(`Retrying with extended timeout for ${mbtiData.mbti}`);
+            const retryResponse = await fetch('https://sonaapi.onrender.com/api/MBTI/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify(requestBody),
+              mode: 'cors',
+              signal: AbortSignal.timeout(45000) // 45 second timeout for retry
+            });
+            
+            if (retryResponse.ok) {
+              const retryData = await retryResponse.json();
+              if (retryData.tracks && retryData.tracks.length > 0) {
+                responseData = retryData;
+              }
+            }
+          }
+        }
         
         return responseData;
       } catch (corsError) {

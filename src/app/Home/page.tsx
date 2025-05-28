@@ -202,7 +202,7 @@ export default function HomePage() {
       </div>
     );
   };
-
+  
   // Process recommendations from API or use fallbacks
   const getRecommendedTracks = (): MusicTrack[] => {
     if (musicRecommendations?.tracks && musicRecommendations.tracks.length > 0) {
@@ -253,12 +253,13 @@ export default function HomePage() {
   const personalizedPicks: MusicTrack[] = allTracks.slice(0, 20);
   
   // Define MBTI-based sections
-  type MBTISection = {
+  interface MBTISection {
     title: string;
     description: string;
     tracks: MusicTrack[];
     gradient: string;
-  };
+    trait: string;
+  }
 
   const getMBTISections = (type: string): MBTISection[] => {
     const sections: MBTISection[] = [];
@@ -269,14 +270,16 @@ export default function HomePage() {
         title: "Energetic Vibes",
         description: "Dynamic and upbeat tracks for your extroverted spirit",
         tracks: getTracksForTrait(allTracks, 'E'),
-        gradient: "from-orange-100 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
+        gradient: "from-orange-100 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20",
+        trait: 'E'
       });
     } else if (type.includes('I')) {
       sections.push({
         title: "Inner Sanctuary",
         description: "Mellow and introspective tracks for your inner world",
         tracks: getTracksForTrait(allTracks, 'I'),
-        gradient: "from-purple-100 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20"
+        gradient: "from-purple-100 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20",
+        trait: 'I'
       });
     }
     
@@ -286,14 +289,16 @@ export default function HomePage() {
         title: "Sensory Rhythms",
         description: "Grounded melodies that connect with your practical nature",
         tracks: getTracksForTrait(allTracks, 'S'),
-        gradient: "from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20"
+        gradient: "from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+        trait: 'S'
       });
     } else if (type.includes('N')) {
       sections.push({
         title: "Abstract Waves",
         description: "Imaginative soundscapes for your intuitive mind",
         tracks: getTracksForTrait(allTracks, 'N'),
-        gradient: "from-blue-100 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20"
+        gradient: "from-blue-100 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20",
+        trait: 'N'
       });
     }
     
@@ -303,14 +308,16 @@ export default function HomePage() {
         title: "Logical Beats",
         description: "Structured and precise compositions for analytical minds",
         tracks: getTracksForTrait(allTracks, 'T'),
-        gradient: "from-slate-100 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20"
+        gradient: "from-slate-100 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20",
+        trait: 'T'
       });
     } else if (type.includes('F')) {
       sections.push({
         title: "Emotional Journey",
         description: "Heartfelt melodies that resonate with your feelings",
         tracks: getTracksForTrait(allTracks, 'F'),
-        gradient: "from-pink-100 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20"
+        gradient: "from-pink-100 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20",
+        trait: 'F'
       });
     }
     
@@ -320,14 +327,16 @@ export default function HomePage() {
         title: "Structured Harmony",
         description: "Organized and balanced tracks for your planned lifestyle",
         tracks: getTracksForTrait(allTracks, 'J'),
-        gradient: "from-teal-100 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20"
+        gradient: "from-teal-100 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20",
+        trait: 'J'
       });
     } else if (type.includes('P')) {
       sections.push({
         title: "Spontaneous Mix",
         description: "Eclectic and dynamic tracks for your flexible spirit",
         tracks: getTracksForTrait(allTracks, 'P'),
-        gradient: "from-violet-100 to-fuchsia-50 dark:from-violet-900/20 dark:to-fuchsia-900/20"
+        gradient: "from-violet-100 to-fuchsia-50 dark:from-violet-900/20 dark:to-fuchsia-900/20",
+        trait: 'P'
       });
     }
     
@@ -335,7 +344,7 @@ export default function HomePage() {
   };
 
   const mbtiSections = getMBTISections(personalityType || "INFJ");
-
+  
   // Map personality types to descriptions
   const personalityDescriptions: Record<string, { title: string, traits: Record<string, number> }> = {
     "INFJ": {
@@ -685,7 +694,7 @@ export default function HomePage() {
                 <div className="flex space-x-4 min-w-max px-1">
                   {personalizedPicks.map((track: MusicTrack, index: number) => (
                     <TrackCard 
-                      key={`personalized-${index}`}
+                      key={`personalized-${index}`} 
                       track={track}
                       index={index}
                       sectionTitle="Compatible Picks"
@@ -720,27 +729,30 @@ export default function HomePage() {
                   <h2 className="text-xl sm:text-2xl font-bold">{section.title}</h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{section.description}</p>
                 </div>
-                <Link href={`/playlists/${section.title.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+                <Link 
+                  href={`/playlists/${section.trait.toLowerCase()}`} 
+                  className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+                >
                   See All
                 </Link>
               </div>
               <div className="relative group">
-                {/* Left scroll button */}
-                {isMounted && (
-                  <button 
-                    onClick={() => {
+              {/* Left scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
                       const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
-                      if (container) {
+                    if (container) {
                         container.scrollBy({ left: -944, behavior: 'smooth' });
-                      }
-                    }}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    aria-label="Scroll left"
-                  >
-                    <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                  </button>
-                )}
-                
+                    }
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
+              
                 <div id={`mbti-scroll-container-${sectionIndex}`} className="overflow-x-auto scrollbar-hide">
                   <div className={`flex space-x-4 min-w-max px-1 rounded-xl bg-${section.gradient}`}>
                     {section.tracks.map((track: MusicTrack, index: number) => (
@@ -750,27 +762,27 @@ export default function HomePage() {
                         index={index}
                         sectionTitle={section.title}
                       />
-                    ))}
-                  </div>
+                  ))}
                 </div>
-                
-                {/* Right scroll button */}
-                {isMounted && (
-                  <button 
-                    onClick={() => {
-                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
-                      if (container) {
-                        container.scrollBy({ left: 944, behavior: 'smooth' });
-                      }
-                    }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    aria-label="Scroll right"
-                  >
-                    <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                  </button>
-                )}
               </div>
-            </section>
+              
+              {/* Right scroll button */}
+              {isMounted && (
+                <button 
+                  onClick={() => {
+                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
+                    if (container) {
+                        container.scrollBy({ left: 944, behavior: 'smooth' });
+                    }
+                  }}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              )}
+            </div>
+          </section>
           ))}
         </div>
         )}

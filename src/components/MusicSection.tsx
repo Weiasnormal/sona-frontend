@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 
 interface Album {
@@ -15,11 +14,19 @@ interface MusicSectionProps {
 }
 
 export default function MusicSection({ title, album, href }: MusicSectionProps) {
+  const handleClick = () => {
+    if (href) {
+      window.open(href, '_blank');
+    }
+  };
+
   return (
-    <Card className="w-full max-w-[280px] sm:max-w-[350px] overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out">
+    <Card 
+      className="w-full max-w-[280px] sm:max-w-[350px] overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer"
+      onClick={handleClick}
+    >
       <CardContent className="p-0">
         <div className="flex flex-col h-full">
-          
           {/* Album Cover */}
           <div className="relative aspect-square w-full overflow-hidden bg-muted/30">
             <Image
@@ -30,6 +37,16 @@ export default function MusicSection({ title, album, href }: MusicSectionProps) 
               sizes="(min-width: 2560px) 20vw, (min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               priority
             />
+            {/* Play button overlay */}
+            <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <svg 
+                className="w-12 h-12 text-white" 
+                fill="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
           </div>
 
           {/* Album Info */}

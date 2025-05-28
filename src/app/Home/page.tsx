@@ -120,21 +120,21 @@ export default function HomePage() {
       }));
     }
     console.log('No API recommendations available, using default items');
-    return Array(6).fill(defaultMusicItem);
+    return Array(20).fill(defaultMusicItem);
   };
   
   // Distribute tracks across different sections
   const allTracks = getRecommendedTracks();
   
-  // Ensure we have enough tracks for all sections
-  while (allTracks.length < 18) {
+  // Ensure we have enough tracks for all sections (20 cards per section)
+  while (allTracks.length < 60) {
     allTracks.push(defaultMusicItem);
   }
   
-  // Divide tracks into different categories
-  const personalizedPicks: MusicTrack[] = allTracks.slice(0, 6);
-  const chillVibes: MusicTrack[] = allTracks.slice(6, 12);
-  const focusMode: MusicTrack[] = allTracks.slice(12, 18);
+  // Divide tracks into different categories (20 cards each)
+  const personalizedPicks: MusicTrack[] = allTracks.slice(0, 20);
+  const chillVibes: MusicTrack[] = allTracks.slice(20, 40);
+  const focusMode: MusicTrack[] = allTracks.slice(40, 60);
   
   // Map personality types to descriptions
   const personalityDescriptions: Record<string, { title: string, traits: Record<string, number> }> = {
@@ -471,7 +471,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('compatible-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: -944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -481,13 +482,13 @@ export default function HomePage() {
                 </button>
               )}
               
-              <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+              <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
                   {personalizedPicks.map((item: MusicTrack, index: number) => (
                     <div 
                       key={`personalized-${index}`} 
                       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                      style={{ width: '220px' }}
                     >
                       <div className="relative aspect-square">
                         <Image 
@@ -512,7 +513,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('compatible-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: 944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -539,7 +541,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('chill-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: -944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -549,13 +552,13 @@ export default function HomePage() {
                 </button>
               )}
               
-              <div id="chill-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+              <div id="chill-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
                   {chillVibes.map((item: MusicTrack, index: number) => (
                     <div 
                       key={`chill-${index}`} 
                       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                      style={{ width: '220px' }}
                     >
                       <div className="relative aspect-square">
                         <Image 
@@ -580,7 +583,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('chill-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: 944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -607,7 +611,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('focus-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: -220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: -944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -617,13 +622,13 @@ export default function HomePage() {
                 </button>
               )}
               
-              <div id="focus-scroll-container" className="overflow-x-auto scrollbar-hide pb-4">
+              <div id="focus-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
                   {focusMode.map((item: MusicTrack, index: number) => (
                     <div 
                       key={`focus-${index}`} 
                       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: 'calc(100vw / 2 - 2rem)', maxWidth: '220px' }}
+                      style={{ width: '220px' }}
                     >
                       <div className="relative aspect-square">
                         <Image 
@@ -648,7 +653,8 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('focus-scroll-container');
                     if (container) {
-                      container.scrollBy({ left: 220, behavior: 'smooth' });
+                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
+                      container.scrollBy({ left: 944, behavior: 'smooth' });
                     }
                   }}
                   className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"

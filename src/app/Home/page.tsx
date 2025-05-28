@@ -46,6 +46,7 @@ export default function HomePage() {
     title: string;
     artist: string;
     imageUrl: string;
+    mood: TrackMood;
   };
 
   type APITrack = {
@@ -62,6 +63,44 @@ export default function HomePage() {
   // State for music recommendations
   const [musicRecommendations, setMusicRecommendations] = useState<MusicRecommendations | null>(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
+
+  // Define track characteristics
+  type TrackMood = {
+    energy: number;      // 0-100: calm to energetic
+    complexity: number;  // 0-100: simple to complex
+    emotion: number;     // 0-100: logical to emotional
+    structure: number;   // 0-100: fluid to structured
+  };
+
+  // Function to determine if a track matches MBTI preferences
+  const getTrackScore = (track: MusicTrack, trait: string): number => {
+    // Get track mood from metadata or assign default
+    const mood: TrackMood = (track as any).mood || {
+      energy: Math.random() * 100,
+      complexity: Math.random() * 100,
+      emotion: Math.random() * 100,
+      structure: Math.random() * 100
+    };
+
+    switch(trait) {
+      case 'E': return mood.energy;
+      case 'I': return 100 - mood.energy;
+      case 'S': return 100 - mood.complexity;
+      case 'N': return mood.complexity;
+      case 'T': return 100 - mood.emotion;
+      case 'F': return mood.emotion;
+      case 'J': return mood.structure;
+      case 'P': return 100 - mood.structure;
+      default: return 50;
+    }
+  };
+
+  // Filter and sort tracks based on MBTI trait
+  const getTracksForTrait = (tracks: MusicTrack[], trait: string, count: number = 20): MusicTrack[] => {
+    return [...tracks]
+      .sort((a, b) => getTrackScore(b, trait) - getTrackScore(a, trait))
+      .slice(0, count);
+  };
 
   useEffect(() => {
     // Check if we have a personality type in localStorage
@@ -106,7 +145,13 @@ export default function HomePage() {
   const defaultMusicItem: MusicTrack = {
     title: "Midnight Dreams",
     artist: "Ambient Collective",
-    imageUrl: "/images/midnight-dreams.png"
+    imageUrl: "/images/midnight-dreams.png",
+    mood: {
+      energy: 50,
+      complexity: 50,
+      emotion: 50,
+      structure: 50
+    }
   };
   
   // Process recommendations from API or use fallbacks
@@ -116,26 +161,130 @@ export default function HomePage() {
       return musicRecommendations.tracks.map((track: APITrack) => ({
         title: track.name || 'Unknown Track',
         artist: track.artist || 'Unknown Artist',
-        imageUrl: track.image || '/images/midnight-dreams.png'
+        imageUrl: track.image || '/images/midnight-dreams.png',
+        mood: {
+          energy: Math.random() * 100,
+          complexity: Math.random() * 100,
+          emotion: Math.random() * 100,
+          structure: Math.random() * 100
+        }
       }));
     }
-    console.log('No API recommendations available, using default items');
-    return Array(20).fill(defaultMusicItem);
+    
+    // Create diverse fallback tracks with different moods
+    const createFallbackTrack = (index: number): MusicTrack => {
+      const moodVariation = Math.sin(index * 0.5) * 50 + 50; // Creates a wave pattern between 0-100
+      return {
+        title: "Midnight Dreams",
+        artist: "Ambient Collective",
+        imageUrl: "/images/midnight-dreams.png",
+        mood: {
+          energy: (moodVariation + Math.random() * 30) % 100,
+          complexity: (moodVariation + Math.random() * 30) % 100,
+          emotion: (moodVariation + Math.random() * 30) % 100,
+          structure: (moodVariation + Math.random() * 30) % 100
+        }
+      };
+    };
+
+    return Array(100).fill(null).map((_, index) => createFallbackTrack(index));
   };
   
-  // Distribute tracks across different sections
+  // Get all tracks
   const allTracks = getRecommendedTracks();
   
-  // Ensure we have enough tracks for all sections (20 cards per section)
-  while (allTracks.length < 60) {
+  // Ensure we have enough tracks for all sections
+  while (allTracks.length < 100) {
     allTracks.push(defaultMusicItem);
   }
   
   // Divide tracks into different categories (20 cards each)
   const personalizedPicks: MusicTrack[] = allTracks.slice(0, 20);
-  const chillVibes: MusicTrack[] = allTracks.slice(20, 40);
-  const focusMode: MusicTrack[] = allTracks.slice(40, 60);
   
+  // Define MBTI-based sections
+  type MBTISection = {
+    title: string;
+    description: string;
+    tracks: MusicTrack[];
+    gradient: string;
+  };
+
+  const getMBTISections = (type: string): MBTISection[] => {
+    const sections: MBTISection[] = [];
+    
+    // Sections based on E/I (Energy)
+    if (type.includes('E')) {
+      sections.push({
+        title: "Energetic Vibes",
+        description: "Dynamic and upbeat tracks for your extroverted spirit",
+        tracks: getTracksForTrait(allTracks, 'E'),
+        gradient: "from-orange-100 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
+      });
+    } else if (type.includes('I')) {
+      sections.push({
+        title: "Inner Sanctuary",
+        description: "Mellow and introspective tracks for your inner world",
+        tracks: getTracksForTrait(allTracks, 'I'),
+        gradient: "from-purple-100 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20"
+      });
+    }
+    
+    // Sections based on S/N (Information Processing)
+    if (type.includes('S')) {
+      sections.push({
+        title: "Sensory Rhythms",
+        description: "Grounded melodies that connect with your practical nature",
+        tracks: getTracksForTrait(allTracks, 'S'),
+        gradient: "from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20"
+      });
+    } else if (type.includes('N')) {
+      sections.push({
+        title: "Abstract Waves",
+        description: "Imaginative soundscapes for your intuitive mind",
+        tracks: getTracksForTrait(allTracks, 'N'),
+        gradient: "from-blue-100 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20"
+      });
+    }
+    
+    // Sections based on T/F (Decision Making)
+    if (type.includes('T')) {
+      sections.push({
+        title: "Logical Beats",
+        description: "Structured and precise compositions for analytical minds",
+        tracks: getTracksForTrait(allTracks, 'T'),
+        gradient: "from-slate-100 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20"
+      });
+    } else if (type.includes('F')) {
+      sections.push({
+        title: "Emotional Journey",
+        description: "Heartfelt melodies that resonate with your feelings",
+        tracks: getTracksForTrait(allTracks, 'F'),
+        gradient: "from-pink-100 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20"
+      });
+    }
+    
+    // Sections based on J/P (Lifestyle)
+    if (type.includes('J')) {
+      sections.push({
+        title: "Structured Harmony",
+        description: "Organized and balanced tracks for your planned lifestyle",
+        tracks: getTracksForTrait(allTracks, 'J'),
+        gradient: "from-teal-100 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20"
+      });
+    } else if (type.includes('P')) {
+      sections.push({
+        title: "Spontaneous Mix",
+        description: "Eclectic and dynamic tracks for your flexible spirit",
+        tracks: getTracksForTrait(allTracks, 'P'),
+        gradient: "from-violet-100 to-fuchsia-50 dark:from-violet-900/20 dark:to-fuchsia-900/20"
+      });
+    }
+    
+    return sections;
+  };
+
+  const mbtiSections = getMBTISections(personalityType || "INFJ");
+
   // Map personality types to descriptions
   const personalityDescriptions: Record<string, { title: string, traits: Record<string, number> }> = {
     "INFJ": {
@@ -471,7 +620,6 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('compatible-scroll-container');
                     if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
                       container.scrollBy({ left: -944, behavior: 'smooth' });
                     }
                   }}
@@ -513,7 +661,6 @@ export default function HomePage() {
                   onClick={() => {
                     const container = document.getElementById('compatible-scroll-container');
                     if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
                       container.scrollBy({ left: 944, behavior: 'smooth' });
                     }
                   }}
@@ -526,145 +673,78 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Chill Vibes Section */}
-          <section className="mb-8 sm:mb-12">
+          {/* Dynamic MBTI-based Sections */}
+          {mbtiSections.map((section, sectionIndex) => (
+            <section key={section.title} className="mb-8 sm:mb-12">
               <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold">Chill Vibes</h2>
-                <Link href="/playlists/chill" className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold">{section.title}</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{section.description}</p>
+                </div>
+                <Link href={`/playlists/${section.title.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
                   See All
                 </Link>
               </div>
               <div className="relative group">
-              {/* Left scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
-                    const container = document.getElementById('chill-scroll-container');
-                    if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
-                      container.scrollBy({ left: -944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll left"
-                >
-                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              )}
-              
-              <div id="chill-scroll-container" className="overflow-x-auto scrollbar-hide">
-                <div className="flex space-x-4 min-w-max px-1">
-                  {chillVibes.map((item: MusicTrack, index: number) => (
-                    <div 
-                      key={`chill-${index}`} 
-                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: '220px' }}
-                    >
-                      <div className="relative aspect-square">
-                        <Image 
-                          src={item.imageUrl} 
-                          alt={item.title} 
-                          fill 
-                          className="object-cover"
-                        />
+                {/* Left scroll button */}
+                {isMounted && (
+                  <button 
+                    onClick={() => {
+                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
+                      if (container) {
+                        container.scrollBy({ left: -944, behavior: 'smooth' });
+                      }
+                    }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  </button>
+                )}
+                
+                <div id={`mbti-scroll-container-${sectionIndex}`} className="overflow-x-auto scrollbar-hide">
+                  <div className={`flex space-x-4 min-w-max px-1 rounded-xl bg-${section.gradient}`}>
+                    {section.tracks.map((item: MusicTrack, index: number) => (
+                      <div 
+                        key={`${section.title}-${index}`} 
+                        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
+                        style={{ width: '220px' }}
+                      >
+                        <div className="relative aspect-square">
+                          <Image 
+                            src={item.imageUrl} 
+                            alt={item.title} 
+                            fill 
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-2 sm:p-3">
+                          <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
+                        </div>
                       </div>
-                      <div className="p-2 sm:p-3">
-                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+                
+                {/* Right scroll button */}
+                {isMounted && (
+                  <button 
+                    onClick={() => {
+                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
+                      if (container) {
+                        container.scrollBy({ left: 944, behavior: 'smooth' });
+                      }
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  </button>
+                )}
               </div>
-              
-              {/* Right scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
-                    const container = document.getElementById('chill-scroll-container');
-                    if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
-                      container.scrollBy({ left: 944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              )}
-            </div>
-          </section>
-
-          {/* Focus Mode */}
-          <section className="mb-8 sm:mb-12">
-            <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold">Focus Mode</h2>
-              <Link href="/playlists/focus" className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
-                See All
-              </Link>
-            </div>
-            <div className="relative group">
-              {/* Left scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
-                    const container = document.getElementById('focus-scroll-container');
-                    if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
-                      container.scrollBy({ left: -944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll left"
-                >
-                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              )}
-              
-              <div id="focus-scroll-container" className="overflow-x-auto scrollbar-hide">
-                <div className="flex space-x-4 min-w-max px-1">
-                  {focusMode.map((item: MusicTrack, index: number) => (
-                    <div 
-                      key={`focus-${index}`} 
-                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: '220px' }}
-                    >
-                      <div className="relative aspect-square">
-                        <Image 
-                          src={item.imageUrl} 
-                          alt={item.title} 
-                          fill 
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="p-2 sm:p-3">
-                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Right scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
-                    const container = document.getElementById('focus-scroll-container');
-                    if (container) {
-                      // Scroll by 4 cards width + gaps (220px * 4 + 16px * 3)
-                      container.scrollBy({ left: 944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              )}
-            </div>
-          </section>
+            </section>
+          ))}
         </div>
         )}
       </main>

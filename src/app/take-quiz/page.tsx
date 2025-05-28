@@ -238,6 +238,17 @@ export default function QuizPage() {
   const [devMode, setDevMode] = useState(false);
   const [forcedMBTI, setForcedMBTI] = useState('');
 
+  // Clear localStorage values when starting a new quiz
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('personalityType');
+      localStorage.removeItem('forcedMBTIType');
+      localStorage.removeItem('musicRecommendations');
+      localStorage.removeItem('recommendationsSource');
+      console.log('Cleared previous quiz data from localStorage');
+    }
+  }, []);
+
   // Handle answer selection
   const handleAnswer = (optionScores: number[]) => {
     // Update scores by adding the option's scores

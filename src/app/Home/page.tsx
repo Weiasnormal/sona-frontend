@@ -47,6 +47,7 @@ export default function HomePage() {
     artist: string;
     imageUrl: string;
     mood: TrackMood;
+    spotifyUrl?: string;  // Add Spotify URL to the track type
   };
 
   type APITrack = {
@@ -54,6 +55,7 @@ export default function HomePage() {
     artist?: string;
     image?: string;
     id?: string;
+    spotifyUrl?: string;  // Add Spotify URL to the API track type
   };
 
   type MusicRecommendations = {
@@ -146,6 +148,7 @@ export default function HomePage() {
     title: "Midnight Dreams",
     artist: "Ambient Collective",
     imageUrl: "/images/midnight-dreams.png",
+    spotifyUrl: "https://open.spotify.com",  // Default Spotify URL
     mood: {
       energy: 50,
       complexity: 50,
@@ -154,6 +157,52 @@ export default function HomePage() {
     }
   };
   
+  // Create a component for the track card to handle click events
+  const TrackCard = ({ track, index, sectionTitle }: { track: MusicTrack; index: number; sectionTitle: string }) => {
+    const handleClick = () => {
+      if (track.spotifyUrl) {
+        // Open Spotify URL in a new tab
+        window.open(track.spotifyUrl, '_blank');
+      } else {
+        // If no specific URL, search for the song on Spotify
+        const searchQuery = encodeURIComponent(`${track.title} ${track.artist}`);
+        window.open(`https://open.spotify.com/search/${searchQuery}`, '_blank');
+      }
+    };
+
+    return (
+      <div 
+        key={`${sectionTitle}-${index}`} 
+        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer flex-shrink-0"
+        style={{ width: '220px' }}
+        onClick={handleClick}
+      >
+        <div className="relative aspect-square">
+          <Image 
+            src={track.imageUrl} 
+            alt={track.title} 
+            fill 
+            className="object-cover"
+          />
+          {/* Add play button overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition-opacity flex items-center justify-center opacity-0 hover:opacity-100">
+            <svg 
+              className="w-12 h-12 text-white" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div className="p-2 sm:p-3">
+          <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{track.title}</h3>
+          <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{track.artist}</p>
+        </div>
+      </div>
+    );
+  };
+
   // Process recommendations from API or use fallbacks
   const getRecommendedTracks = (): MusicTrack[] => {
     if (musicRecommendations?.tracks && musicRecommendations.tracks.length > 0) {
@@ -162,6 +211,7 @@ export default function HomePage() {
         title: track.name || 'Unknown Track',
         artist: track.artist || 'Unknown Artist',
         imageUrl: track.image || '/images/midnight-dreams.png',
+        spotifyUrl: track.spotifyUrl,  // Add Spotify URL from API
         mood: {
           energy: Math.random() * 100,
           complexity: Math.random() * 100,
@@ -173,11 +223,12 @@ export default function HomePage() {
     
     // Create diverse fallback tracks with different moods
     const createFallbackTrack = (index: number): MusicTrack => {
-      const moodVariation = Math.sin(index * 0.5) * 50 + 50; // Creates a wave pattern between 0-100
+      const moodVariation = Math.sin(index * 0.5) * 50 + 50;
       return {
         title: "Midnight Dreams",
         artist: "Ambient Collective",
         imageUrl: "/images/midnight-dreams.png",
+        spotifyUrl: "https://open.spotify.com",  // Default Spotify URL
         mood: {
           energy: (moodVariation + Math.random() * 30) % 100,
           complexity: (moodVariation + Math.random() * 30) % 100,
@@ -632,25 +683,13 @@ export default function HomePage() {
               
               <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
-                  {personalizedPicks.map((item: MusicTrack, index: number) => (
-                    <div 
-                      key={`personalized-${index}`} 
-                      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                      style={{ width: '220px' }}
-                    >
-                      <div className="relative aspect-square">
-                        <Image 
-                          src={item.imageUrl} 
-                          alt={item.title} 
-                          fill 
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="p-2 sm:p-3">
-                        <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                      </div>
-                    </div>
+                  {personalizedPicks.map((track: MusicTrack, index: number) => (
+                    <TrackCard 
+                      key={`personalized-${index}`}
+                      track={track}
+                      index={index}
+                      sectionTitle="Compatible Picks"
+                    />
                   ))}
                 </div>
               </div>
@@ -704,25 +743,13 @@ export default function HomePage() {
                 
                 <div id={`mbti-scroll-container-${sectionIndex}`} className="overflow-x-auto scrollbar-hide">
                   <div className={`flex space-x-4 min-w-max px-1 rounded-xl bg-${section.gradient}`}>
-                    {section.tracks.map((item: MusicTrack, index: number) => (
-                      <div 
-                        key={`${section.title}-${index}`} 
-                        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow flex-shrink-0"
-                        style={{ width: '220px' }}
-                      >
-                        <div className="relative aspect-square">
-                          <Image 
-                            src={item.imageUrl} 
-                            alt={item.title} 
-                            fill 
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="p-2 sm:p-3">
-                          <h3 className="font-medium text-xs sm:text-sm md:text-base truncate">{item.title}</h3>
-                          <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{item.artist}</p>
-                        </div>
-                      </div>
+                    {section.tracks.map((track: MusicTrack, index: number) => (
+                      <TrackCard 
+                        key={`${section.title}-${index}`}
+                        track={track}
+                        index={index}
+                        sectionTitle={section.title}
+                      />
                     ))}
                   </div>
                 </div>

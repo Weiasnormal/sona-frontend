@@ -169,11 +169,10 @@ export default function HomePage() {
     setIsLoadingRecommendations(false);
   }, []);
   
-  // Update sorted tracks when all tracks or sort option changes
+  // Apply sorting when sort option changes
   useEffect(() => {
     if (!isLoadingRecommendations) {
-      const sortedTracks = sortAllTracks();
-      setAllSortedTracks(sortedTracks);
+      // The sorting will be applied directly when rendering the tracks
     }
   }, [globalSortOption, musicRecommendations, isLoadingRecommendations]);
 
@@ -293,32 +292,14 @@ export default function HomePage() {
     allTracks.push(defaultMusicItem);
   }
   
-  // Function to get all tracks from all sections
-  const getAllTracks = (): MusicTrack[] => {
-    const tracks: MusicTrack[] = [];
-    
-    // Add personalized picks
-    tracks.push(...personalizedPicks);
-    
-    // Add tracks from all MBTI sections
-    mbtiSections.forEach(section => {
-      tracks.push(...section.tracks);
-    });
-    
-    return tracks;
-  };
-  
-  // Function to sort all tracks using Merge Sort
-  const sortAllTracks = () => {
-    const tracks = getAllTracks();
-    return mergeSort(tracks, globalSortOption.field, globalSortOption.order);
+  // Function to sort tracks using Merge Sort
+  const sortTracks = (tracks: MusicTrack[], field: SortField, order: SortOrder): MusicTrack[] => {
+    return mergeSort(tracks, field, order);
   };
   
   // Handle global sort change
   const handleGlobalSortChange = (option: SortOption) => {
     setGlobalSortOption(option);
-    const sortedTracks = mergeSort(getAllTracks(), option.field, option.order);
-    setAllSortedTracks(sortedTracks);
   };
   
   // Divide tracks into different categories (20 cards each)
@@ -752,22 +733,7 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Display all sorted tracks if there are any */}
-          {allSortedTracks.length > 0 && (
-            <section className="mb-8 sm:mb-12">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4">All Sorted Tracks</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                {allSortedTracks.slice(0, 20).map((track, index) => (
-                  <TrackCard 
-                    key={`global-sorted-${index}`}
-                    track={track}
-                    index={index}
-                    sectionTitle="All Tracks"
-                  />
-                ))}
-              </div>
-            </section>
-          )}
+          {/* No All Sorted Tracks section - sorting is applied to individual sections */}
           
           {/* MBTI Compatible Picks Section */}
           <section className="mb-8 sm:mb-12 mt-12">
@@ -806,7 +772,7 @@ export default function HomePage() {
               
               <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
-                  {personalizedPicks.slice(0, 20).map((track: MusicTrack, index: number) => (
+                  {sortTracks(personalizedPicks, globalSortOption.field, globalSortOption.order).slice(0, 20).map((track: MusicTrack, index: number) => (
                     <TrackCard 
                       key={`personalized-${index}`} 
                       track={track}
@@ -877,7 +843,7 @@ export default function HomePage() {
                 
                 <div id={`mbti-scroll-container-${sectionIndex}`} className="overflow-x-auto scrollbar-hide">
                   <div className={`flex space-x-4 min-w-max px-1 rounded-xl bg-${section.gradient}`}>
-                    {section.tracks.slice(0, 20).map((track: MusicTrack, index: number) => (
+                    {sortTracks(section.tracks, globalSortOption.field, globalSortOption.order).slice(0, 20).map((track: MusicTrack, index: number) => (
                       <TrackCard 
                         key={`${section.title}-${index}`}
                         track={track}

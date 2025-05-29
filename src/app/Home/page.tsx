@@ -33,7 +33,11 @@ const SectionSkeleton = () => (
 const ChevronLeft = dynamic(() => import('lucide-react').then(mod => mod.ChevronLeft), { ssr: false });
 const ChevronRight = dynamic(() => import('lucide-react').then(mod => mod.ChevronRight), { ssr: false });
 
+import { useRouter } from 'next/navigation';
+import type { PlaylistData } from '@/types/playlist';
+
 export default function HomePage() {
+  const router = useRouter();
   // State to store the personality type from URL or localStorage
   const [personalityType, setPersonalityType] = useState<string | null>(null);
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
@@ -41,6 +45,19 @@ export default function HomePage() {
   // State to track if component is mounted (client-side only)
   const [isMounted, setIsMounted] = useState(false);
   
+  // State to track expanded sections
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    'compatible': false
+  });
+  
+  // Function to toggle section expansion
+  const toggleSectionExpansion = (sectionId: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
+  };
+
   // Define types for music recommendations
   type MusicTrack = {
     title: string;
@@ -563,6 +580,11 @@ export default function HomePage() {
   const safePersonalityType = personalityType && personalityDescriptions[personalityType] ? personalityType : "INFJ";
   const currentPersonality = personalityDescriptions[safePersonalityType];
 
+  const navigateToPlaylist = (playlistData: PlaylistData) => {
+    const encodedData = encodeURIComponent(JSON.stringify(playlistData));
+    router.push(`/playlists?data=${encodedData}`);
+  };
+
   return (
     <>
       <Header />
@@ -665,13 +687,23 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Personalized Picks Section - Above the fold, no lazy loading needed */}
+          {/* MBTI Compatible Picks Section */}
           <section className="mb-8 sm:mb-12 mt-12">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
               <h2 className="text-xl sm:text-2xl font-bold">{personalityType || "INFJ"} Compatible Picks</h2>
-              <Link href={`/playlists/${(personalityType || "INFJ").toLowerCase()}`} className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+              <button
+                onClick={() => navigateToPlaylist({
+                  title: `${personalityType || "INFJ"} Compatible Picks`,
+                  description: "Your personalized music recommendations based on your personality type",
+                  tracks: personalizedPicks,
+                  gradient: "from-indigo-100 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20",
+                  type: 'compatible',
+                  personalityType: personalityType || "INFJ"
+                })}
+                className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+              >
                 See All
-              </Link>
+              </button>
             </div>
             <div className="relative group">
               {/* Left scroll button */}
@@ -692,7 +724,7 @@ export default function HomePage() {
               
               <div id="compatible-scroll-container" className="overflow-x-auto scrollbar-hide">
                 <div className="flex space-x-4 min-w-max px-1">
-                  {personalizedPicks.map((track: MusicTrack, index: number) => (
+                  {personalizedPicks.slice(0, 20).map((track: MusicTrack, index: number) => (
                     <TrackCard 
                       key={`personalized-${index}`} 
                       track={track}
@@ -721,7 +753,7 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Dynamic MBTI-based Sections */}
+          {/* MBTI-based Sections */}
           {mbtiSections.map((section, sectionIndex) => (
             <section key={section.title} className="mb-8 sm:mb-12">
               <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -729,60 +761,68 @@ export default function HomePage() {
                   <h2 className="text-xl sm:text-2xl font-bold">{section.title}</h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{section.description}</p>
                 </div>
-                <Link 
-                  href={`/playlists/${section.trait.toLowerCase()}`} 
+                <button
+                  onClick={() => navigateToPlaylist({
+                    title: section.title,
+                    description: section.description,
+                    tracks: section.tracks,
+                    gradient: section.gradient,
+                    trait: section.trait,
+                    type: 'mbti'
+                  })}
                   className="text-sm sm:text-base text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
                 >
                   See All
-                </Link>
-              </div>
-              <div className="relative group">
-              {/* Left scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
-                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
-                    if (container) {
-                        container.scrollBy({ left: -944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll left"
-                >
-                  <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 </button>
-              )}
+              </div>
               
+              <div className="relative group">
+                {/* Left scroll button */}
+                {isMounted && (
+                  <button 
+                    onClick={() => {
+                      const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
+                      if (container) {
+                        container.scrollBy({ left: -944, behavior: 'smooth' });
+                      }
+                    }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  </button>
+                )}
+                
                 <div id={`mbti-scroll-container-${sectionIndex}`} className="overflow-x-auto scrollbar-hide">
                   <div className={`flex space-x-4 min-w-max px-1 rounded-xl bg-${section.gradient}`}>
-                    {section.tracks.map((track: MusicTrack, index: number) => (
+                    {section.tracks.slice(0, 20).map((track: MusicTrack, index: number) => (
                       <TrackCard 
                         key={`${section.title}-${index}`}
                         track={track}
                         index={index}
                         sectionTitle={section.title}
                       />
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-              
-              {/* Right scroll button */}
-              {isMounted && (
-                <button 
-                  onClick={() => {
+                
+                {/* Right scroll button */}
+                {isMounted && (
+                  <button 
+                    onClick={() => {
                       const container = document.getElementById(`mbti-scroll-container-${sectionIndex}`);
-                    if (container) {
+                      if (container) {
                         container.scrollBy({ left: 944, behavior: 'smooth' });
-                    }
-                  }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                </button>
-              )}
-            </div>
-          </section>
+                      }
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  </button>
+                )}
+              </div>
+            </section>
           ))}
         </div>
         )}

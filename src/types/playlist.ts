@@ -9,6 +9,7 @@ export interface MusicTrack {
     structure: number;
   };
   spotifyUrl?: string;
+  album?: string; // Added album field for sorting
 }
 
 export interface PlaylistData {
@@ -19,4 +20,4 @@ export interface PlaylistData {
   trait?: string;
   type: 'compatible' | 'mbti';
   personalityType?: string;
-} 
+}

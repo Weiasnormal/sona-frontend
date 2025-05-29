@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import MusicSection from '@/components/MusicSection';
 import { getFunctionPair } from '@/utils/api';
 import Header from '@/components/Header';
+import SortDropdown from '@/components/SortDropdown';
+import { quickSort, SortOption, SORT_OPTIONS, SortField, SortOrder } from '@/utils/sortUtils';
 
 // Types for tracks and recommendations
 type MusicTrack = {
@@ -19,6 +21,7 @@ type MusicTrack = {
     structure: number;
   };
   spotifyUrl?: string;
+  album?: string; // Add album name for sorting
 };
 
 type APITrack = {
@@ -27,6 +30,7 @@ type APITrack = {
   image?: string;
   id?: string;
   spotifyUrl?: string;
+  album?: string; // Add album name for sorting
 };
 
 type MusicRecommendations = {
@@ -118,6 +122,8 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
   const [musicRecommendations, setMusicRecommendations] = useState<MusicRecommendations | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [personalityType, setPersonalityType] = useState<string | null>(null);
+  const [currentSortOption, setCurrentSortOption] = useState<SortOption>(SORT_OPTIONS[0]);
+  const [sortedTracks, setSortedTracks] = useState<MusicTrack[]>([]);
 
   // Get section details
   const sectionDetails = getSectionDetails(normalizedId);
@@ -168,25 +174,54 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
       return [];
     }
 
-    const allTracks: MusicTrack[] = tracks.map(track => ({
-      title: track.name || 'Unknown Track',
-      artist: track.artist || 'Unknown Artist',
-      imageUrl: track.image || '/images/midnight-dreams.png',
-      spotifyUrl: track.spotifyUrl,
-      mood: {
-        energy: Math.random() * 100,
-        complexity: Math.random() * 100,
-        emotion: Math.random() * 100,
-        structure: Math.random() * 100
-      }
-    }));
+    // Generate some album names for variety if not provided
+    const albumNames = [
+      "Ethereal Journeys",
+      "Midnight Collection",
+      "Ambient Waves",
+      "Dreamy Landscapes",
+      "Sonic Meditation"
+    ];
 
-    // Sort tracks by trait score using normalized id
-    return allTracks
+    const allTracks: MusicTrack[] = tracks.map((track, index) => {
+      // Generate a consistent album name based on index if not provided
+      const albumName = track.album || albumNames[index % albumNames.length];
+      
+      return {
+        title: track.name || 'Unknown Track',
+        artist: track.artist || 'Unknown Artist',
+        imageUrl: track.image || '/images/midnight-dreams.png',
+        spotifyUrl: track.spotifyUrl,
+        album: albumName, // Add album name
+        mood: {
+          energy: Math.random() * 100,
+          complexity: Math.random() * 100,
+          emotion: Math.random() * 100,
+          structure: Math.random() * 100
+        }
+      };
+    });
+
+    // First sort tracks by trait score using normalized id
+    const traitSortedTracks = allTracks
       .sort((a, b) => getTrackScore(b, normalizedId) - getTrackScore(a, normalizedId));
+      
+    // Then apply the user-selected sort if any
+    return quickSort(traitSortedTracks, currentSortOption.field, currentSortOption.order);
   };
 
-  const filteredTracks = getFilteredTracks();
+  // Update sorted tracks when sort option or recommendations change
+  useEffect(() => {
+    if (!isLoading) {
+      const newSortedTracks = getFilteredTracks();
+      setSortedTracks(newSortedTracks);
+    }
+  }, [currentSortOption, musicRecommendations, isLoading]);
+  
+  // Handle sort option change
+  const handleSortChange = (option: SortOption) => {
+    setCurrentSortOption(option);
+  };
 
   return (
     <>
@@ -194,8 +229,18 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
       <main className="flex-1 w-full transition-all duration-300">
         <div className={`w-full bg-gradient-to-b ${sectionDetails.gradient} py-12`}>
           <div className="container max-w-[2560px] mx-auto px-4 lg:px-8 2xl:px-12">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">{sectionDetails.title}</h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8">{sectionDetails.description}</p>
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">{sectionDetails.title}</h1>
+                <p className="text-lg sm:text-xl text-muted-foreground">{sectionDetails.description}</p>
+              </div>
+              <div className="mt-4">
+                <SortDropdown 
+                  onSortChange={handleSortChange}
+                  defaultOption={currentSortOption}
+                />
+              </div>
+            </div>
             
             {isLoading ? (
               <div className="flex justify-center py-12">
@@ -203,7 +248,7 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8">
-                {filteredTracks.map((track, index) => (
+                {sortedTracks.map((track, index) => (
                   <MusicSection
                     key={`${track.title}-${index}`}
                     title={sectionDetails.title}

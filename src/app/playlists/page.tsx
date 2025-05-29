@@ -4,11 +4,15 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Image from 'next/image';
+import SortDropdown from '@/components/SortDropdown';
+import { quickSort, SortOption, SORT_OPTIONS, SortField, SortOrder } from '@/utils/sortUtils';
 import type { PlaylistData, MusicTrack } from '@/types/playlist';
 
 export default function PlaylistPage() {
   const searchParams = useSearchParams();
   const [playlistData, setPlaylistData] = useState<PlaylistData | null>(null);
+  const [currentSortOption, setCurrentSortOption] = useState<SortOption>(SORT_OPTIONS[0]);
+  const [sortedTracks, setSortedTracks] = useState<MusicTrack[]>([]);
 
   useEffect(() => {
     // Get the encoded playlist data from URL
@@ -17,12 +21,50 @@ export default function PlaylistPage() {
       try {
         const decodedData = JSON.parse(decodeURIComponent(encodedData));
         setPlaylistData(decodedData);
+        
+        // Ensure all tracks have album field for sorting
+        const tracksWithAlbum = decodedData.tracks.map((track: MusicTrack) => {
+          // Create a new track with album field if it doesn't exist
+          if (!track.album) {
+            return {
+              ...track,
+              album: 'Unknown Album' // Default album name
+            };
+          }
+          return track;
+        });
+        
+        // Apply initial sorting
+        const initialSortedTracks = quickSort(tracksWithAlbum, currentSortOption.field, currentSortOption.order);
+        setSortedTracks(initialSortedTracks as MusicTrack[]);
       } catch (error) {
         console.error('Error parsing playlist data:', error);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, currentSortOption]);
 
+  // Handle sort option change
+  const handleSortChange = (option: SortOption) => {
+    setCurrentSortOption(option);
+    if (playlistData && playlistData.tracks) {
+      // Ensure all tracks have album field for sorting
+      const tracksWithAlbum = playlistData.tracks.map((track: MusicTrack) => {
+        // Create a new track with album field if it doesn't exist
+        if (!track.album) {
+          return {
+            ...track,
+            album: 'Unknown Album' // Default album name
+          };
+        }
+        return track;
+      });
+      
+      // Apply new sorting to tracks
+      const newSortedTracks = quickSort(tracksWithAlbum, option.field, option.order);
+      setSortedTracks(newSortedTracks as MusicTrack[]);
+    }
+  };
+  
   // Create a component for the track card to handle click events
   const TrackCard = ({ track }: { track: MusicTrack }) => {
     const handleClick = () => {
@@ -33,6 +75,8 @@ export default function PlaylistPage() {
         window.open(`https://open.spotify.com/search/${searchQuery}`, '_blank');
       }
     };
+
+   
 
     return (
       <div 
@@ -89,22 +133,30 @@ export default function PlaylistPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
               {/* Header Section */}
-              <div className="mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold mb-2">{playlistData.title}</h1>
-                <p className="text-gray-600 dark:text-gray-400 text-lg">
-                  {playlistData.description}
-                </p>
-                {playlistData.type === 'compatible' && playlistData.personalityType && (
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                    Personalized for {playlistData.personalityType} personality type
+              <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end">
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-bold mb-2">{playlistData.title}</h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-lg">
+                    {playlistData.description}
                   </p>
-                )}
+                  {playlistData.type === 'compatible' && playlistData.personalityType && (
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                      Personalized for {playlistData.personalityType} personality type
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4 md:mt-0">
+                  <SortDropdown 
+                    onSortChange={handleSortChange}
+                    defaultOption={currentSortOption}
+                  />
+                </div>
               </div>
 
               {/* Tracks Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                {playlistData.tracks.map((track, index) => (
-                  <TrackCard key={`${track.title}-${index}`} track={track} />
+              {(sortedTracks.length > 0 ? sortedTracks : playlistData.tracks).map((track: MusicTrack, index: number) => (
+                <TrackCard key={`${track.title}-${index}`} track={track} />
                 ))}
               </div>
             </div>

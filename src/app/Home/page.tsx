@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import SortDropdown from '@/components/SortDropdown';
+import { mergeSort, SortOption, SORT_OPTIONS, SortField, SortOrder } from '@/utils/sortUtils';
 import "../../styles/test.css";
 import "../../styles/responsive.css";
 
@@ -65,6 +67,7 @@ export default function HomePage() {
     imageUrl: string;
     mood: TrackMood;
     spotifyUrl?: string;  // Add Spotify URL to the track type
+    album?: string;      // Add album name for sorting
   };
 
   type APITrack = {
@@ -73,6 +76,7 @@ export default function HomePage() {
     image?: string;
     id?: string;
     spotifyUrl?: string;  // Add Spotify URL to the API track type
+    album?: string;      // Add album name for sorting
   };
 
   type MusicRecommendations = {
@@ -82,6 +86,11 @@ export default function HomePage() {
   // State for music recommendations
   const [musicRecommendations, setMusicRecommendations] = useState<MusicRecommendations | null>(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
+  
+  // State for global sorting option
+  const [globalSortOption, setGlobalSortOption] = useState<SortOption>(SORT_OPTIONS[0]);
+  // State for all sorted tracks
+  const [allSortedTracks, setAllSortedTracks] = useState<MusicTrack[]>([]);
 
   // Define track characteristics
   type TrackMood = {
@@ -159,6 +168,14 @@ export default function HomePage() {
     setIsMounted(true);
     setIsLoadingRecommendations(false);
   }, []);
+  
+  // Update sorted tracks when all tracks or sort option changes
+  useEffect(() => {
+    if (!isLoadingRecommendations) {
+      const sortedTracks = sortAllTracks();
+      setAllSortedTracks(sortedTracks);
+    }
+  }, [globalSortOption, musicRecommendations, isLoadingRecommendations]);
 
   // Default fallback data for the music cards if API recommendations aren't available
   const defaultMusicItem: MusicTrack = {
@@ -229,6 +246,7 @@ export default function HomePage() {
         artist: track.artist || 'Unknown Artist',
         imageUrl: track.image || '/images/midnight-dreams.png',
         spotifyUrl: track.spotifyUrl,  // Add Spotify URL from API
+        album: track.album || 'Unknown Album', // Add album name from API
         mood: {
           energy: Math.random() * 100,
           complexity: Math.random() * 100,
@@ -241,11 +259,20 @@ export default function HomePage() {
     // Create diverse fallback tracks with different moods
     const createFallbackTrack = (index: number): MusicTrack => {
       const moodVariation = Math.sin(index * 0.5) * 50 + 50;
+      // Generate some album names for variety
+      const albumNames = [
+        "Ethereal Journeys",
+        "Midnight Collection",
+        "Ambient Waves",
+        "Dreamy Landscapes",
+        "Sonic Meditation"
+      ];
       return {
         title: "Midnight Dreams",
         artist: "Ambient Collective",
         imageUrl: "/images/midnight-dreams.png",
         spotifyUrl: "https://open.spotify.com",  // Default Spotify URL
+        album: albumNames[index % albumNames.length],
         mood: {
           energy: (moodVariation + Math.random() * 30) % 100,
           complexity: (moodVariation + Math.random() * 30) % 100,
@@ -265,6 +292,34 @@ export default function HomePage() {
   while (allTracks.length < 100) {
     allTracks.push(defaultMusicItem);
   }
+  
+  // Function to get all tracks from all sections
+  const getAllTracks = (): MusicTrack[] => {
+    const tracks: MusicTrack[] = [];
+    
+    // Add personalized picks
+    tracks.push(...personalizedPicks);
+    
+    // Add tracks from all MBTI sections
+    mbtiSections.forEach(section => {
+      tracks.push(...section.tracks);
+    });
+    
+    return tracks;
+  };
+  
+  // Function to sort all tracks using Merge Sort
+  const sortAllTracks = () => {
+    const tracks = getAllTracks();
+    return mergeSort(tracks, globalSortOption.field, globalSortOption.order);
+  };
+  
+  // Handle global sort change
+  const handleGlobalSortChange = (option: SortOption) => {
+    setGlobalSortOption(option);
+    const sortedTracks = mergeSort(getAllTracks(), option.field, option.order);
+    setAllSortedTracks(sortedTracks);
+  };
   
   // Divide tracks into different categories (20 cards each)
   const personalizedPicks: MusicTrack[] = allTracks.slice(0, 20);
@@ -584,11 +639,11 @@ export default function HomePage() {
     const encodedData = encodeURIComponent(JSON.stringify(playlistData));
     router.push(`/playlists?data=${encodedData}`);
   };
-
+  
   return (
     <>
       <Header />
-      <main id="main-content" className="flex-1 w-full bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 overflow-x-hidden min-w-[240px]">
+      <main className="flex-1 w-full bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 overflow-x-hidden min-w-[240px]">
         {!hasCompletedQuiz ? (
           // Blank state when user hasn't taken the quiz
           <div className="container mx-auto px-3 xs:px-4 sm:px-6 py-20 text-center max-w-3xl">
@@ -603,11 +658,11 @@ export default function HomePage() {
             </div>
           </div>
         ) : (
-          // Content when user has completed the quiz
           <div className="container mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 sm:py-8 md:py-10 lg:py-16 max-w-7xl">
-          <div className="flex flex-col lg:flex-row items-center gap-4 xs:gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
-            {/* Left Side - Text Content */}
-            <div className="w-full lg:w-1/2 space-y-3 xs:space-y-4 sm:space-y-6 text-center lg:text-left">
+            <div className="flex flex-col lg:flex-row items-center gap-4 xs:gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
+              {/* Left Side - Text Content */}
+              <div className="w-full lg:w-1/2 space-y-3 xs:space-y-4 sm:space-y-6 text-center lg:text-left">
+                
               <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 Discover Music<br />
                 That Matches<br />
@@ -686,6 +741,33 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          
+          {/* Global Sort Dropdown */}
+          <div className="flex justify-end mt-10">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-4 py-2">
+              <SortDropdown 
+                onSortChange={handleGlobalSortChange}
+                defaultOption={globalSortOption}
+              />
+            </div>
+          </div>
+          
+          {/* Display all sorted tracks if there are any */}
+          {allSortedTracks.length > 0 && (
+            <section className="mb-8 sm:mb-12">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4">All Sorted Tracks</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {allSortedTracks.slice(0, 20).map((track, index) => (
+                  <TrackCard 
+                    key={`global-sorted-${index}`}
+                    track={track}
+                    index={index}
+                    sectionTitle="All Tracks"
+                  />
+                ))}
+              </div>
+            </section>
+          )}
           
           {/* MBTI Compatible Picks Section */}
           <section className="mb-8 sm:mb-12 mt-12">
@@ -825,7 +907,7 @@ export default function HomePage() {
             </section>
           ))}
         </div>
-        )}
+        )}  {/* Close the ternary operator */}
       </main>
     </>
   );

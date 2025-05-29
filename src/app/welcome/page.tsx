@@ -27,39 +27,75 @@ export default function WelcomePage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-screen text-center">
-        <div className="mb-8">
+    <main className="relative min-h-screen overflow-hidden bg-[#0A0A0A]">
+      {/* Background Circles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Blue Circle */}
+        <div className="absolute -left-[10%] -top-[10%] w-[40%] h-[40%] blur-2xl">
           <Image
-            src="/images/Sona.svg"
-            alt="Sona Logo"
-            width={120}
-            height={120}
-            className="mx-auto"
+            src="/images/Blue Circle.svg"
+            alt="Blue Circle Background"
+            fill
+            className="object-contain"
             priority
           />
         </div>
         
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
-          Welcome to Sona
-        </h1>
+        {/* Purple Circle */}
+        <div className="absolute -right-[15%] top-[20%] w-[50%] h-[50%] blur-2xl">
+          <Image
+            src="/images/Purple Circle.svg"
+            alt="Purple Circle Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
         
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
-          Your personal music companion that understands your personality and musical preferences
-        </p>
+        {/* Yellow Circle */}
+        <div className="absolute -bottom-[15%] -left-[15%] w-[45%] h-[45%] blur-2xl">
+          <Image
+            src="/images/Yellow Circle.svg"
+            alt="Yellow Circle Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
 
-        <div className="animate-pulse">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Redirecting you to discover your musical personality...
-          </p>
+      {/* Content */}
+      <div className="relative container mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-screen">
+        {/* Logo */}
+        <div className="mb-12">
+          <Image
+            src="/images/Sona.svg"
+            alt="Sona Logo"
+            width={48}
+            height={48}
+            priority
+          />
         </div>
 
-        <button
-          onClick={() => router.push('/mbti-selection')}
-          className="mt-8 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full transition-colors font-medium"
-        >
-          Get Started Now
-        </button>
+        {/* Main Content */}
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight">
+            Discover Music<br />
+            That Matches<br />
+            <span className="text-indigo-400">Your Personality</span>
+          </h1>
+          
+          <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-xl mx-auto">
+            Your personal music companion that understands your personality and musical preferences
+          </p>
+
+          <button
+            onClick={() => router.push('/mbti-selection')}
+            className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full transition-colors font-medium text-lg"
+          >
+            Take the Quiz →
+          </button>
+        </div>
       </div>
     </main>
   );

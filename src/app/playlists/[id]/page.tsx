@@ -226,19 +226,21 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
   return (
     <>
       <Header />
-      <main className="flex-1 w-full transition-all duration-300">
-        <div className={`w-full bg-gradient-to-b ${sectionDetails.gradient} py-12`}>
-          <div className="container max-w-[2560px] mx-auto px-4 lg:px-8 2xl:px-12">
-            <div className="flex justify-between items-center mb-4">
+      <main className="flex-1 w-full min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 overflow-x-hidden min-w-[240px] transition-all duration-300">
+        <div className={`w-full bg-gradient-to-b ${sectionDetails.gradient} py-8 xs:py-10 sm:py-12`}>
+          <div className="container mx-auto px-3 xs:px-4 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-6 xs:mb-8">
               <div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">{sectionDetails.title}</h1>
-                <p className="text-lg sm:text-xl text-muted-foreground">{sectionDetails.description}</p>
+                <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-2">{sectionDetails.title}</h1>
+                <p className="text-base xs:text-lg sm:text-xl text-gray-600 dark:text-gray-400">{sectionDetails.description}</p>
               </div>
-              <div className="mt-4">
-                <SortDropdown 
-                  onSortChange={handleSortChange}
-                  defaultOption={currentSortOption}
-                />
+              <div className="mt-4 sm:mt-0 flex justify-end">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-3 xs:px-4 py-2">
+                  <SortDropdown 
+                    onSortChange={handleSortChange}
+                    defaultOption={currentSortOption}
+                  />
+                </div>
               </div>
             </div>
             
@@ -247,7 +249,7 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
                 <div className="w-12 h-12 border-t-2 border-b-2 border-indigo-500 rounded-full animate-spin"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 xs:gap-5 sm:gap-6 md:gap-8">
                 {sortedTracks.map((track, index) => (
                   <MusicSection
                     key={`${track.title}-${index}`}

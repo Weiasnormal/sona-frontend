@@ -80,8 +80,7 @@ export default function PlaylistPage() {
 
     return (
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer"
-        style={{ width: '220px' }}
+        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer w-full max-w-[220px] flex-shrink-0"
         onClick={handleClick}
       >
         <div className="relative aspect-square">
@@ -128,33 +127,35 @@ export default function PlaylistPage() {
   return (
     <>
       <Header />
-      <main className="flex-1 w-full min-h-screen">
-        <div className={`w-full bg-gradient-to-b ${playlistData.gradient} py-12`}>
-          <div className="container mx-auto px-4">
-            <div className="max-w-7xl mx-auto">
+      <main className="flex-1 w-full min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:to-gray-900 overflow-x-hidden min-w-[240px]">
+        <div className={`w-full bg-gradient-to-b ${playlistData.gradient} py-8 xs:py-10 sm:py-12`}>
+          <div className="container mx-auto px-3 xs:px-4 sm:px-6 md:px-8">
+            <div className="max-w-[2560px] mx-auto">
               {/* Header Section */}
-              <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end">
+              <div className="mb-6 xs:mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end">
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-bold mb-2">{playlistData.title}</h1>
-                  <p className="text-gray-600 dark:text-gray-400 text-lg">
+                  <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold mb-2">{playlistData.title}</h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-base xs:text-lg">
                     {playlistData.description}
                   </p>
                   {playlistData.type === 'compatible' && playlistData.personalityType && (
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                    <p className="text-xs xs:text-sm text-gray-500 dark:text-gray-500 mt-2">
                       Personalized for {playlistData.personalityType} personality type
                     </p>
                   )}
                 </div>
-                <div className="mt-4 md:mt-0">
-                  <SortDropdown 
-                    onSortChange={handleSortChange}
-                    defaultOption={currentSortOption}
-                  />
+                <div className="mt-4 sm:mt-0 flex justify-end">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-3 xs:px-4 py-2">
+                    <SortDropdown 
+                      onSortChange={handleSortChange}
+                      defaultOption={currentSortOption}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Tracks Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 xs:gap-5 sm:gap-6">
               {(sortedTracks.length > 0 ? sortedTracks : playlistData.tracks).map((track: MusicTrack, index: number) => (
                 <TrackCard key={`${track.title}-${index}`} track={track} />
                 ))}

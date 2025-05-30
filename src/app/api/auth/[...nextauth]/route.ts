@@ -76,5 +76,8 @@ export const authOptions: AuthOptions = {
   },
 }
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST } 
+// Create and export handlers using the auth configuration
+const handler = NextAuth(authOptions);
+
+// Export the handlers as named exports
+export { handler as GET, handler as POST }; 

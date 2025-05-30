@@ -628,7 +628,7 @@ export default function HomePage() {
         {/* Background Circles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Blue Circle */}
-          <div className="absolute -left-[10%] -top-[10%] w-[40%] h-[40%] blur-2xl opacity-30 dark:opacity-100 base:opacity-100 transition-opacity duration-300">
+          <div className="absolute -left-[10%] -top-[10%] w-[40%] h-[40%] blur-2xl opacity-100">
             <Image
               src="/images/Blue Circle.svg"
               alt="Blue Circle Background"
@@ -638,8 +638,30 @@ export default function HomePage() {
             />
           </div>
           
+          {/* Yellow Circle */}
+          <div className="absolute -right-[0%] -top-[10%] w-[25%] h-[25%] blur-2xl opacity-100">
+            <Image
+              src="/images/Yellow Circle.svg"
+              alt="Blue Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
           {/* Purple Circle */}
-          <div className="absolute -right-[15%] top-[20%] w-[50%] h-[50%] blur-2xl opacity-30 dark:opacity-100 transition-opacity duration-300">
+          <div className="absolute -right-[-35%] top-[4%] w-[20%] h-[20%] blur-2xl opacity-100">
+            <Image
+              src="/images/Purple Circle.svg"
+              alt="Purple Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
+          {/* Purple Circle */}
+          <div className="absolute -right-[15%] top-[20%] w-[50%] h-[50%] blur-2xl opacity-80">
             <Image
               src="/images/Purple Circle.svg"
               alt="Purple Circle Background"
@@ -650,7 +672,7 @@ export default function HomePage() {
           </div>
           
           {/* Yellow Circle */}
-          <div className="absolute -bottom-[15%] -left-[15%] w-[45%] h-[45%] blur-2xl">
+          <div className="absolute -bottom-[15%] -left-[15%] w-[45%] h-[45%] blur-2xl opacity-100">
             <Image
               src="/images/Yellow Circle.svg"
               alt="Yellow Circle Background"

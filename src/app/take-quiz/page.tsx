@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import "../../styles/responsive.css";
+import Image from 'next/image';
 import { sendMBTIData, getFunctionPair } from '@/utils/api';
 
 // Define the quiz questions with their scoring values
@@ -413,13 +414,72 @@ export default function QuizPage() {
   return (
     <>
       <Header />
-      <main className="flex-1 w-full bg-gradient-to-b from-red-400 to-red-500 dark:from-[#1C81E7] dark:to-[#1C81E7]/80 min-h-screen overflow-x-hidden">
+      <main className="flex-1 w-full bg-white dark:bg-[#0A0A0A] min-h-screen overflow-hidden">
         <div className="relative w-full">
-          {/* Wave-like shape at the bottom */}
-          <div className="absolute bottom-0 w-full">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full">
-              <path fill="currentColor" className="text-white dark:text-gray-900" fillOpacity="1" d="M0,96L80,106.7C160,117,320,139,480,149.3C640,160,800,160,960,138.7C1120,117,1280,75,1360,53.3L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
-            </svg>
+          {/* Blue Circle */}
+          <div className="absolute -left-[60%] -top-[5%] w-[110%] h-[110%] blur-1xl opacity-100">
+            <Image
+              src="/images/Blue Circle.svg"
+              alt="Blue Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          
+          {/* Blue Circle */}
+          <div className="absolute -right-[55%] -bottom-[240%] w-[100%] h-[100%] blur-1xl opacity-100">
+            <Image
+              src="/images/Blue Circle.svg"
+              alt="Blue Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
+          {/* Yellow Circle */}
+          <div className="absolute -right-[30%] top-[80%] w-[100%] h-[100%] blur-2xl opacity-80">
+            <Image
+              src="/images/Yellow Circle.svg"
+              alt="Blue Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
+          {/* Purple Circle */}
+          <div className="absolute -right-[50%] top-[-50%] w-[100%] h-[100%] blur-1xl opacity-100">
+            <Image
+              src="/images/Purple Circle.svg"
+              alt="Purple Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>        
+          
+          {/* Purple Circle */}
+          <div className="absolute -left-[10%] top-[200%] w-[80%] h-[80%] blur-1xl opacity-100">
+            <Image
+              src="/images/Purple Circle.svg"
+              alt="Purple Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          
+          {/* Yellow Circle */}
+          <div className="absolute -left-[50%] -bottom-[280%] w-[100%] h-[100%] blur-2xl opacity-100">
+            <Image
+              src="/images/Yellow Circle.svg"
+              alt="Yellow Circle Background"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           
           {/* Content */}
@@ -430,7 +490,7 @@ export default function QuizPage() {
         </div>
         
         <div className="container mx-auto px-4 -mt-32 relative z-20 pb-20">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 sm:p-8 max-w-4xl mx-auto">
+          <div className="bg-white-300/20 dark:bg-gray-900/20 backdrop-blur-md rounded-xl shadow-xl border border-white/30 dark:border-gray-700/30 p-6 sm:p-8 max-w-4xl mx-auto">
             {!quizComplete ? (
               <div>
                 {/* Question */}

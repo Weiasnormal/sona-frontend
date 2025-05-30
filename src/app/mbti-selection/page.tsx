@@ -187,7 +187,7 @@ export default function MBTISelectionPage() {
         
         <div className="container mx-auto px-4 -mt-32 relative z-20 pb-20">
           <div className="flex justify-center">
-            <div className="w-full lg:w-1/2 bg-white/30 dark:bg-gray-900/20 backdrop-blur- rounded-xl shadow-lg border border-white/30 dark:border-gray-700/30 p-4 sm:p-6">
+            <div className="w-full lg:w-1/2 bg-[#FEFEFE] dark:bg-gray-900/20 backdrop-blur- rounded-xl shadow-lg border border-white/30 dark:border-gray-700/30 p-4 sm:p-6">
               {!showResults ? (
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
@@ -218,7 +218,7 @@ export default function MBTISelectionPage() {
                                 className={`py-2 px-3 rounded-md transition-all ${
                                   selectedMBTI === type 
                                     ? 'bg-red-500 dark:bg-[#1C81E7] text-white' 
-                                    : 'bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border-white/30 dark:border-gray-700/30 text-gray-800 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50 shadow-sm'
+                                    : 'bg-white/90 dark:bg-gray-900/40 backdrop-blur-md border-white/30 dark:border-gray-700/30 text-gray-800 dark:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 shadow-md'
                                 }`}
                               >
                                 {type}
@@ -254,7 +254,7 @@ export default function MBTISelectionPage() {
                       )}
                     </button>
                     
-                    <Link href="/take-quiz" className="px-6 py-3 rounded-full font-medium bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border border-white/30 dark:border-gray-700/30 text-red-500 dark:text-[#1C81E7] hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all shadow-sm">
+                    <Link href="/take-quiz" className="px-6 py-3 rounded-full font-medium bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border border-white/30 dark:border-gray-700/30 text-red-500 dark:text-[#1C81E7] hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-all shadow-md">
                       I Don't Know My Type - Take Quiz
                     </Link>
                   </div>

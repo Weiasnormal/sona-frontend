@@ -320,16 +320,16 @@ export default function HomePage() {
     // Sections based on E/I (Energy)
     if (type.includes('E')) {
       sections.push({
-        title: "Energetic Vibes",
-        description: "Dynamic and upbeat tracks for your extroverted spirit",
+        title: "Extrovert's Energy Boost",
+        description: "High-energy tracks that match your outgoing personality and social energy",
         tracks: getTracksForTrait(allTracks, 'E'),
         gradient: "from-orange-100 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20",
         trait: 'E'
       });
     } else if (type.includes('I')) {
       sections.push({
-        title: "Inner Sanctuary",
-        description: "Mellow and introspective tracks for your inner world",
+        title: "Introvert's Sanctuary",
+        description: "Calming melodies for reflection and recharging your inner energy",
         tracks: getTracksForTrait(allTracks, 'I'),
         gradient: "from-purple-100 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20",
         trait: 'I'
@@ -339,16 +339,16 @@ export default function HomePage() {
     // Sections based on S/N (Information Processing)
     if (type.includes('S')) {
       sections.push({
-        title: "Sensory Rhythms",
-        description: "Grounded melodies that connect with your practical nature",
+        title: "Sensor's Reality",
+        description: "Concrete rhythms and familiar patterns that ground you in the present moment",
         tracks: getTracksForTrait(allTracks, 'S'),
         gradient: "from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
         trait: 'S'
       });
     } else if (type.includes('N')) {
       sections.push({
-        title: "Abstract Waves",
-        description: "Imaginative soundscapes for your intuitive mind",
+        title: "Intuitive's Vision",
+        description: "Complex compositions that spark your imagination and future possibilities",
         tracks: getTracksForTrait(allTracks, 'N'),
         gradient: "from-blue-100 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20",
         trait: 'N'
@@ -358,16 +358,16 @@ export default function HomePage() {
     // Sections based on T/F (Decision Making)
     if (type.includes('T')) {
       sections.push({
-        title: "Logical Beats",
-        description: "Structured and precise compositions for analytical minds",
+        title: "Thinker's Logic",
+        description: "Structured compositions with intricate patterns that engage your analytical mind",
         tracks: getTracksForTrait(allTracks, 'T'),
         gradient: "from-slate-100 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20",
         trait: 'T'
       });
     } else if (type.includes('F')) {
       sections.push({
-        title: "Emotional Journey",
-        description: "Heartfelt melodies that resonate with your feelings",
+        title: "Feeler's Heart",
+        description: "Emotionally resonant tracks that speak to your empathetic nature",
         tracks: getTracksForTrait(allTracks, 'F'),
         gradient: "from-pink-100 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20",
         trait: 'F'
@@ -377,16 +377,16 @@ export default function HomePage() {
     // Sections based on J/P (Lifestyle)
     if (type.includes('J')) {
       sections.push({
-        title: "Structured Harmony",
-        description: "Organized and balanced tracks for your planned lifestyle",
+        title: "Judger's Harmony",
+        description: "Well-structured tracks with clear progression that satisfy your need for order",
         tracks: getTracksForTrait(allTracks, 'J'),
         gradient: "from-teal-100 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20",
         trait: 'J'
       });
     } else if (type.includes('P')) {
       sections.push({
-        title: "Spontaneous Mix",
-        description: "Eclectic and dynamic tracks for your flexible spirit",
+        title: "Perceiver's Flow",
+        description: "Dynamic and unpredictable tracks that match your adaptable nature",
         tracks: getTracksForTrait(allTracks, 'P'),
         gradient: "from-violet-100 to-fuchsia-50 dark:from-violet-900/20 dark:to-fuchsia-900/20",
         trait: 'P'

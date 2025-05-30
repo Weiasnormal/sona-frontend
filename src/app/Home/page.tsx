@@ -716,12 +716,31 @@ export default function HomePage() {
                   <div>
                     <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Extroverted</span>
-                      <span className="hidden xs:inline">{currentPersonality?.traits?.["Introverted"] || 50}% Introverted</span>
-                      <span className="inline xs:hidden">{currentPersonality?.traits?.["Introverted"] || 50}%</span>
+                      <span className="hidden xs:inline text-blue-500">
+                        <b>
+                          {currentPersonality?.traits?.["Introverted"] > 50
+                            ? `${currentPersonality?.traits?.["Introverted"]}% Introverted`
+                            : `${100 - (currentPersonality?.traits?.["Introverted"] || 0)}% Extroverted`}
+                        </b>
+                      </span>
+                      <span className="inline xs:hidden text-blue-500">
+                        <b>
+                          {currentPersonality?.traits?.["Introverted"] > 50
+                            ? `${currentPersonality?.traits?.["Introverted"]}%`
+                            : `${100 - (currentPersonality?.traits?.["Introverted"] || 0)}%`}
+                        </b>
+                      </span>
                       <span>Introverted</span>
                     </div>
                     <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Introverted"] || 50}%` }}></div>
+                      <div 
+                        className="h-full bg-blue-500 rounded-full" 
+                        style={{ 
+                          width: `${currentPersonality?.traits?.["Introverted"] > 50 
+                            ? currentPersonality?.traits?.["Introverted"] 
+                            : 100 - (currentPersonality?.traits?.["Introverted"] || 0)}%` 
+                        }}
+                      ></div>
                     </div>
                   </div>
 
@@ -729,38 +748,95 @@ export default function HomePage() {
                   <div>
                     <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Sensing</span>
-                      <span className="hidden xs:inline">{currentPersonality?.traits?.["Intuitive"] || 50}% Intuitive</span>
-                      <span className="inline xs:hidden">{currentPersonality?.traits?.["Intuitive"] || 50}%</span>
+                      <span className="hidden xs:inline text-green-500">
+                        <b>
+                          {currentPersonality?.traits?.["Intuitive"] > 50
+                            ? `${currentPersonality?.traits?.["Intuitive"]}% Intuitive`
+                            : `${100 - (currentPersonality?.traits?.["Intuitive"] || 0)}% Sensing`}
+                        </b>
+                      </span>
+                      <span className="inline xs:hidden text-green-500">
+                        <b>
+                          {currentPersonality?.traits?.["Intuitive"] > 50
+                            ? `${currentPersonality?.traits?.["Intuitive"]}%`
+                            : `${100 - (currentPersonality?.traits?.["Intuitive"] || 0)}%`}
+                        </b>
+                      </span>
                       <span>Intuitive</span>
                     </div>
                     <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Intuitive"] || 50}%` }}></div>
+                      <div 
+                        className="h-full bg-green-500 rounded-full" 
+                        style={{ 
+                          width: `${currentPersonality?.traits?.["Intuitive"] > 50 
+                            ? currentPersonality?.traits?.["Intuitive"] 
+                            : 100 - (currentPersonality?.traits?.["Intuitive"] || 0)}%` 
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
-                  {/* Thinking vs Feeling */}
+                  {/* Feeling vs Thinking */}
                   <div>
                     <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Thinking</span>
-                      <span className="hidden xs:inline">{currentPersonality?.traits?.["Feeling"] || 50}% Feeling</span>
-                      <span className="inline xs:hidden">{currentPersonality?.traits?.["Feeling"] || 50}%</span>
+                      <span className="hidden xs:inline text-purple-500">
+                        <b>
+                          {currentPersonality?.traits?.["Feeling"] > 50
+                            ? `${currentPersonality?.traits?.["Feeling"]}% Feeling`
+                            : `${100 - (currentPersonality?.traits?.["Feeling"] || 0)}% Thinking`}
+                        </b>
+                      </span>
+                      <span className="inline xs:hidden text-purple-500">
+                        <b>
+                          {currentPersonality?.traits?.["Feeling"] > 50
+                            ? `${currentPersonality?.traits?.["Feeling"]}%`
+                            : `${100 - (currentPersonality?.traits?.["Feeling"] || 0)}%`}
+                        </b>
+                      </span>
                       <span>Feeling</span>
                     </div>
                     <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Feeling"] || 50}%` }}></div>
+                      <div 
+                        className="h-full bg-purple-500 rounded-full" 
+                        style={{ 
+                          width: `${currentPersonality?.traits?.["Feeling"] > 50 
+                            ? currentPersonality?.traits?.["Feeling"] 
+                            : 100 - (currentPersonality?.traits?.["Feeling"] || 0)}%` 
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
                   {/* Judging vs Perceiving */}
                   <div>
                     <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
-                      <span>Judging</span>
-                      <span className="hidden xs:inline">{currentPersonality?.traits?.["Judging"] || 50}% Judging</span>
-                      <span className="inline xs:hidden">{currentPersonality?.traits?.["Judging"] || 50}%</span>
                       <span>Perceiving</span>
+                      <span className="hidden xs:inline text-red-500">
+                        <b>
+                          {currentPersonality?.traits?.["Judging"] > 50
+                            ? `${currentPersonality?.traits?.["Judging"]}% Judging`
+                            : `${100 - (currentPersonality?.traits?.["Judging"] || 0)}% Perceiving`}
+                        </b>
+                      </span>
+                      <span className="inline xs:hidden text-red-500">
+                        <b>
+                          {currentPersonality?.traits?.["Judging"] > 50
+                            ? `${currentPersonality?.traits?.["Judging"]}%`
+                            : `${100 - (currentPersonality?.traits?.["Judging"] || 0)}%`}
+                        </b>
+                      </span>
+                      <span>Judging</span>
                     </div>
                     <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Judging"] || 50}%` }}></div>
+                      <div 
+                        className="h-full bg-red-500 rounded-full" 
+                        style={{ 
+                          width: `${currentPersonality?.traits?.["Judging"] > 50 
+                            ? currentPersonality?.traits?.["Judging"] 
+                            : 100 - (currentPersonality?.traits?.["Judging"] || 0)}%` 
+                        }}
+                      ></div>
                     </div>
                   </div>
                 </div>

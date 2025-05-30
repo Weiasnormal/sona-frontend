@@ -21,7 +21,7 @@ export default function WelcomePage() {
         // If quiz is not completed, go to MBTI selection
         router.push('/mbti-selection');
       }
-    }, 10000); // 10 second delay
+    }, 5000); // 5 second delay
 
     return () => clearTimeout(timer);
   }, [router]);
@@ -69,10 +69,10 @@ export default function WelcomePage() {
         {/* Logo */}
         <div className="mb-12">
           <Image
-            src="/images/Sona.svg"
+            src="/images/SONA.svg"
             alt="Sona Logo"
-            width={48}
-            height={48}
+            width={100}
+            height={100}
             priority
           />
         </div>

@@ -22,7 +22,7 @@ export default function MusicSection({ title, album, href }: MusicSectionProps) 
 
   return (
     <Card 
-      className="w-full max-w-[280px] sm:max-w-[350px] overflow-hidden group hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer"
+      className="w-full max-w-[280px] sm:max-w-[350px] overflow-hidden group hover:shadow-lg cursor-pointer"
       onClick={handleClick}
     >
       <CardContent className="p-0">
@@ -33,7 +33,7 @@ export default function MusicSection({ title, album, href }: MusicSectionProps) 
               src={album.imageUrl}
               alt={`${album.title} by ${album.artist}`}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform group-hover:scale-105"
               sizes="(min-width: 2560px) 20vw, (min-width: 1536px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
               priority
             />

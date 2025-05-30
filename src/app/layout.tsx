@@ -23,13 +23,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(
         inter.className,
-        "min-h-screen bg-background font-sans antialiased desktop:min-w-[1024px] overflow-x-auto"
+        "min-h-screen bg-background dark:bg-[#0A0A0A] font-sans antialiased desktop:min-w-[1024px] overflow-x-auto"
       )}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
         >
           {/* The header will be rendered as part of children, outside main-content */}
           <div className="relative flex min-h-screen flex-col">

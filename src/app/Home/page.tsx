@@ -206,7 +206,7 @@ export default function HomePage() {
     return (
       <div 
         key={`${sectionTitle}-${index}`} 
-        className="bg-gray-900/50 backdrop-blur-xl rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer flex-shrink-0 border border-gray-800"
+        className="bg-white/90 dark:bg-gray-900/50 backdrop-blur-xl rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105 cursor-pointer flex-shrink-0 border border-gray-200 dark:border-gray-800"
         style={{ width: '220px' }}
         onClick={handleClick}
       >
@@ -229,8 +229,8 @@ export default function HomePage() {
           </div>
         </div>
         <div className="p-2 sm:p-3">
-          <h3 className="font-medium text-xs sm:text-sm md:text-base truncate text-white">{track.title}</h3>
-          <p className="text-gray-400 text-xs truncate">{track.artist}</p>
+          <h3 className="font-medium text-xs sm:text-sm md:text-base truncate text-gray-800 dark:text-white">{track.title}</h3>
+          <p className="text-gray-600 dark:text-gray-400 text-xs truncate">{track.artist}</p>
         </div>
       </div>
     );
@@ -624,11 +624,11 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="flex-1 w-full bg-[#0A0A0A] overflow-x-hidden min-w-[240px] relative">
+      <main className="flex-1 w-full bg-white dark:bg-[#0A0A0A] overflow-x-hidden min-w-[240px] relative">
         {/* Background Circles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Blue Circle */}
-          <div className="absolute -left-[10%] -top-[10%] w-[40%] h-[40%] blur-2xl">
+          <div className="absolute -left-[10%] -top-[10%] w-[40%] h-[40%] blur-2xl opacity-30 dark:opacity-100 base:opacity-100 transition-opacity duration-300">
             <Image
               src="/images/Blue Circle.svg"
               alt="Blue Circle Background"
@@ -639,7 +639,7 @@ export default function HomePage() {
           </div>
           
           {/* Purple Circle */}
-          <div className="absolute -right-[15%] top-[20%] w-[50%] h-[50%] blur-2xl">
+          <div className="absolute -right-[15%] top-[20%] w-[50%] h-[50%] blur-2xl opacity-30 dark:opacity-100 transition-opacity duration-300">
             <Image
               src="/images/Purple Circle.svg"
               alt="Purple Circle Background"
@@ -661,30 +661,17 @@ export default function HomePage() {
           </div>
         </div>
 
-        {!hasCompletedQuiz ? (
-          // Blank state when user hasn't taken the quiz
-          <div className="container mx-auto px-3 xs:px-4 sm:px-6 py-20 text-center max-w-3xl relative">
-            <div className="bg-gray-900/50 backdrop-blur-xl rounded-xl shadow-lg p-6 sm:p-8 md:p-10 border border-gray-800">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">Welcome to Sona</h1>
-              <p className="text-gray-300 mb-6 sm:mb-8">
-                It looks like you haven't taken the personality quiz yet. To get personalized music recommendations, you'll need to complete the quiz first.
-              </p>
-              <Link href="/take-quiz" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 rounded-full transition-colors">
-                Take the Quiz <span className="ml-2">→</span>
-              </Link>
-            </div>
-          </div>
-        ) : (
+        {(
           <div className="container mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 sm:py-8 md:py-10 lg:py-16 max-w-7xl relative">
             <div className="flex flex-col lg:flex-row items-center gap-4 xs:gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
               {/* Left Side - Text Content */}
               <div className="w-full lg:w-1/2 space-y-3 xs:space-y-4 sm:space-y-6 text-center lg:text-left">
-                <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight dark:text-white">
                   Discover Music<br />
                   That Matches<br />
                   <span className="text-indigo-400">Your Personality</span>
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-gray-400">
+                <p className="text-base sm:text-lg md:text-xl text-black dark:text-white">
                   Your personality type is <span className="font-bold text-indigo-400">{personalityType}</span>
                 </p>
                 <div>
@@ -695,62 +682,62 @@ export default function HomePage() {
               </div>
 
               {/* Right Side - MBTI Profile Card */}
-              <div className="w-full lg:w-1/2 bg-gray-900/50 backdrop-blur-xl rounded-xl shadow-lg p-4 sm:p-6 border border-gray-800">
+              <div className="w-full lg:w-1/2 bg-white/90 dark:bg-gray-900/50 backdrop-blur-xl rounded-xl shadow-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-800">
                 <div className="mb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-white">{personalityType || "INFJ"} Profile</h2>
-                  <p className="text-sm sm:text-base text-gray-300">{currentPersonality?.title || "The Advocate"}</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{personalityType || "INFJ"} Profile</h2>
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">{currentPersonality?.title || "The Advocate"}</p>
                 </div>
 
                 {/* Personality Traits */}
                 <div className="space-y-4 sm:space-y-6">
                   {/* Extroverted vs Introverted */}
                   <div>
-                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-300">
+                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Extroverted</span>
                       <span className="hidden xs:inline">{currentPersonality?.traits?.["Introverted"] || 50}% Introverted</span>
                       <span className="inline xs:hidden">{currentPersonality?.traits?.["Introverted"] || 50}%</span>
                       <span>Introverted</span>
                     </div>
-                    <div className="h-1.5 sm:h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Introverted"] || 50}%` }}></div>
                     </div>
                   </div>
 
                   {/* Intuitive vs Sensing */}
                   <div>
-                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-300">
+                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Sensing</span>
                       <span className="hidden xs:inline">{currentPersonality?.traits?.["Intuitive"] || 50}% Intuitive</span>
                       <span className="inline xs:hidden">{currentPersonality?.traits?.["Intuitive"] || 50}%</span>
                       <span>Intuitive</span>
                     </div>
-                    <div className="h-1.5 sm:h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-purple-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Intuitive"] || 50}%` }}></div>
                     </div>
                   </div>
                   
                   {/* Thinking vs Feeling */}
                   <div>
-                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-300">
+                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Thinking</span>
                       <span className="hidden xs:inline">{currentPersonality?.traits?.["Feeling"] || 50}% Feeling</span>
                       <span className="inline xs:hidden">{currentPersonality?.traits?.["Feeling"] || 50}%</span>
                       <span>Feeling</span>
                     </div>
-                    <div className="h-1.5 sm:h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Feeling"] || 50}%` }}></div>
                     </div>
                   </div>
                   
                   {/* Judging vs Perceiving */}
                   <div>
-                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-300">
+                    <div className="flex justify-between text-[10px] xs:text-xs sm:text-sm mb-1 text-gray-600 dark:text-gray-300">
                       <span>Judging</span>
                       <span className="hidden xs:inline">{currentPersonality?.traits?.["Judging"] || 50}% Judging</span>
                       <span className="inline xs:hidden">{currentPersonality?.traits?.["Judging"] || 50}%</span>
                       <span>Perceiving</span>
                     </div>
-                    <div className="h-1.5 sm:h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-yellow-500 rounded-full" style={{ width: `${currentPersonality?.traits?.["Judging"] || 50}%` }}></div>
                     </div>
                   </div>
@@ -760,7 +747,7 @@ export default function HomePage() {
             
             {/* Global Sort Dropdown */}
             <div className="flex justify-end mt-10">
-              <div className="bg-gray-900/50 backdrop-blur-xl rounded-lg shadow-md px-4 py-2 border border-gray-800">
+              <div className="bg-white/90 dark:bg-gray-900/50 backdrop-blur-xl rounded-lg shadow-md px-4 py-2 border border-gray-200 dark:border-gray-800 z-30">
                 <SortDropdown 
                   onSortChange={handleGlobalSortChange}
                   defaultOption={globalSortOption}
@@ -773,7 +760,7 @@ export default function HomePage() {
             {/* MBTI Compatible Picks Section */}
             <section className="mb-8 sm:mb-12 mt-12">
               <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-white">{personalityType || "INFJ"} Compatible Picks</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{personalityType || "INFJ"} Compatible Picks</h2>
                 <button
                   onClick={() => navigateToPlaylist({
                     title: `${personalityType || "INFJ"} Compatible Picks`,
@@ -841,7 +828,7 @@ export default function HomePage() {
               <section key={section.title} className="mb-8 sm:mb-12">
                 <div className="flex justify-between items-center mb-4 sm:mb-6">
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold">{section.title}</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{section.title}</h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{section.description}</p>
                   </div>
                   <button
@@ -908,7 +895,7 @@ export default function HomePage() {
               </section>
             ))}
           </div>
-        )}  {/* Close the ternary operator */}
+        )} 
       </main>
     </>
   );

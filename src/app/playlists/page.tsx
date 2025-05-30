@@ -138,14 +138,9 @@ export default function PlaylistPage() {
                   <p className="text-gray-600 dark:text-gray-400 text-base xs:text-lg">
                     {playlistData.description}
                   </p>
-                  {playlistData.type === 'compatible' && playlistData.personalityType && (
-                    <p className="text-xs xs:text-sm text-gray-500 dark:text-gray-500 mt-2">
-                      Personalized for {playlistData.personalityType} personality type
-                    </p>
-                  )}
                 </div>
                 <div className="mt-4 sm:mt-0 flex justify-end">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-3 xs:px-4 py-2">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-3 xs:px-4 py-2 z-50">
                     <SortDropdown 
                       onSortChange={handleSortChange}
                       defaultOption={currentSortOption}

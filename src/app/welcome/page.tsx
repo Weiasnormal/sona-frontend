@@ -93,7 +93,7 @@ export default function WelcomePage() {
             onClick={() => router.push('/mbti-selection')}
             className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full transition-colors font-medium text-lg"
           >
-            Take the Quiz →
+            Select Your MBTI →
           </button>
         </div>
       </div>

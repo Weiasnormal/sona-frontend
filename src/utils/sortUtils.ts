@@ -36,8 +36,6 @@ export interface SortOption {
 export const SORT_OPTIONS: SortOption[] = [
   { label: 'Song Name (A-Z)', field: SortField.TITLE, order: SortOrder.ASCENDING },
   { label: 'Song Name (Z-A)', field: SortField.TITLE, order: SortOrder.DESCENDING },
-  { label: 'Album Name (A-Z)', field: SortField.ALBUM, order: SortOrder.ASCENDING },
-  { label: 'Album Name (Z-A)', field: SortField.ALBUM, order: SortOrder.DESCENDING },
 ];
 
 /**
